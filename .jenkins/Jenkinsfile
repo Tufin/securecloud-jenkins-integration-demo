@@ -16,7 +16,7 @@ pipeline {
         stage('SecureCloud workload security check'){
             environment {
                 TUFIN_API_ACCESS_KEY = credentials('jenkins-securecloud-api-access-key')
-                filename = '${WORKSPACE}/k8s/app.yaml'
+                filename = '${env.WORKSPACE}/k8s/app.yaml'
             }
             steps {
                 script {
