@@ -26,6 +26,7 @@ pipeline {
                             .trim()
                             .tokenize("\n")
                     echo "HTTP response status code: $code"
+                    which jq
                     
                     podSecurityContextRisks = sh(script: "echo ${response} | jq '[.workloads[].risks[] | select(.exempted == false)] | unique)'", returnStdout: true)
                     podSecurityContextRisksCount = sh(script: "echo ${podSecurityContextRisks} | jq length", returnStdout: true)
