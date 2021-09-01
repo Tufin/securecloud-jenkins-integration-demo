@@ -27,6 +27,9 @@ pipeline {
                             .tokenize("\n")
                     echo "HTTP response status code: $code"
                     
+                    sh(script: "sudo apt-get update -y")
+                    sh(script: "sudo apt-get install -y jq")
+                    
                     whichJq = sh(script: "which jq", returnStdout: true)
                     echo "which jq: ${whichJq}"
                     
