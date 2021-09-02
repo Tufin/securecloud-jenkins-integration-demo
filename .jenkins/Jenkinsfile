@@ -2,9 +2,6 @@ podTemplate(containers: [
         containerTemplate(name: 'tufin', image: 'eu.gcr.io/dream-198012/tufin-cloud-deployer:1.0.0-master', command: 'sleep', args: '99d')
     ]) {
     
-    env.TUFIN_API_ACCESS_KEY = credentials('jenkins-securecloud-api-access-key')
-    env.filename = '/k8s/app.yaml'
-
     node(POD_LABEL) {
             
         stage('build go code') {
@@ -20,22 +17,26 @@ podTemplate(containers: [
         stage('Tufin SecureCloud integration'){
             container('tufin') {
                 stage('SecureCloud workload security check') {
-                    script {
-                        final String url = "https://nir.securecloudtestnir.tufin.io/api/v1/orca/model/cross-cluster/workload-risks"
-                        final def (String response, int code) =
-                            sh(script: "curl -X POST -s -w '\\n%{response_code}' $url -H 'Authorization: Bearer ${TUFIN_API_ACCESS_KEY}' -H 'Content-Type: application/octet-stream' --data-binary '@${WORKSPACE}${filename}'", returnStdout: true)
-                                .trim()
-                                .tokenize("\n")
-                        echo "HTTP response status code: $code"
+                    withCredentials([string(credentialsId: 'jenkins-securecloud-api-access-key', variable: 'TUFIN_API_ACCESS_KEY')]) {
+                        script {
+                            final String filename = '/k8s/app.yaml'
 
-                        podSecurityContextRisks = sh(script: "echo ${response} | jq '[.workloads[].risks[] | select(.exempted == false)] | unique)'", returnStdout: true)
-                        podSecurityContextRisksCount = sh(script: "echo ${podSecurityContextRisks} | jq length", returnStdout: true)
+                            final String url = "https://nir.securecloudtestnir.tufin.io/api/v1/orca/model/cross-cluster/workload-risks"
+                            final def (String response, int code) =
+                                sh(script: "curl -X POST -s -w '\\n%{response_code}' $url -H 'Authorization: Bearer ${TUFIN_API_ACCESS_KEY}' -H 'Content-Type: application/octet-stream' --data-binary '@${WORKSPACE}${filename}'", returnStdout: true)
+                                    .trim()
+                                    .tokenize("\n")
+                            echo "HTTP response status code: $code"
 
-                        containerSecurityContextRisks = sh(script: "echo ${response} | jq '[.workloads[].containers[].risks[] | select(.exempted == false)] | unique)'", returnStdout: true)
-                        containerSecurityContextRisksCount = sh(script: "echo ${containerSecurityContextRisks} | jq length", returnStdout: true)
+                            podSecurityContextRisks = sh(script: "echo ${response} | jq '[.workloads[].risks[] | select(.exempted == false)] | unique)'", returnStdout: true)
+                            podSecurityContextRisksCount = sh(script: "echo ${podSecurityContextRisks} | jq length", returnStdout: true)
 
-                        echo "${podSecurityContextRisksCount} Pod Security Context Risks: ${podSecurityContextRisks}"
-                        echo "${containerSecurityContextRisksCount} Container Security Context Risks: ${containerSecurityContextRisks}"
+                            containerSecurityContextRisks = sh(script: "echo ${response} | jq '[.workloads[].containers[].risks[] | select(.exempted == false)] | unique)'", returnStdout: true)
+                            containerSecurityContextRisksCount = sh(script: "echo ${containerSecurityContextRisks} | jq length", returnStdout: true)
+
+                            echo "${podSecurityContextRisksCount} Pod Security Context Risks: ${podSecurityContextRisks}"
+                            echo "${containerSecurityContextRisksCount} Container Security Context Risks: ${containerSecurityContextRisks}"
+                        }
                     }
                 }
             }
