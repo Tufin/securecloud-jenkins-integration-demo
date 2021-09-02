@@ -24,12 +24,10 @@ podTemplate(containers: [
                             inputFilename = "${WORKSPACE}/k8s/app.yaml"
                             outputFilename = "${inputFilename}.response.json"
 
-                            final String url = "https://nir.securecloudtestnir.tufin.io/api/v1/orca/model/cross-cluster/workload-risks"
-                            final def (String code) =
-                                sh(script: "curl -X POST -s -w '%{response_code}' $url -H 'Authorization: Bearer ${TUFIN_API_ACCESS_KEY}' -H 'Content-Type: application/octet-stream' --data-binary '@${inputFilename}' -o ${outputFilename}", returnStdout: true)
-                                    .trim()
+                            url = "https://nir.securecloudtestnir.tufin.io/api/v1/orca/model/cross-cluster/workload-risks"
+                            code = sh(script: "curl -X POST -s -w '%{response_code}' $url -H 'Authorization: Bearer ${TUFIN_API_ACCESS_KEY}' -H 'Content-Type: application/octet-stream' --data-binary '@${inputFilename}' -o ${outputFilename}", returnStdout: true).trim()
                                 
-                            echo "HTTP response status code: $code"
+                            echo "HTTP response status code: ${code}"
                             
                             podSecurityContextRisks = sh(script: "jq '[.workloads[].risks?[] | select(.exempted == false)] | unique' ${outputFilename}", returnStdout: true).trim()
                             podSecurityContextRisksCount = sh(script: "jq '[.workloads[].risks?[] | select(.exempted == false)] | unique | length' ${outputFilename}", returnStdout: true).trim()
