@@ -3,6 +3,9 @@ podTemplate(containers: [
     ]) {
     
     node(POD_LABEL) {
+        stage('checkout') {
+            checkout {}
+        }
             
         stage('build go code') {
             sh 'echo "go build ./..."'
