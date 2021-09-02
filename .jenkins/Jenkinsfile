@@ -1,5 +1,5 @@
 pipeline {
-    agent any
+    agent { docker { image "eu.gcr.io/dream-198012/tufin-cloud-deployer:1.0.0-master" } }
     stages {
         stage('build go code') {
             steps {
