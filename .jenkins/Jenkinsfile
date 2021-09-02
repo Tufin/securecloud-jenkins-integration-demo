@@ -28,10 +28,8 @@ podTemplate(containers: [containerTemplate(name: 'alpine-curl-jq', image: 'dwdra
                                 ]) {
                                 script {
                                     code = sh(script: 'curl -X POST -s -w "%{response_code}" $url -H "Authorization: Bearer ${TUFIN_API_ACCESS_KEY}" -H "Content-Type: application/octet-stream" --data-binary @${inputFilename} -o ${outputFilename}', returnStdout: true).trim()
-
-                                    echo "HTTP response status code: ${code}"
                                     if (code != "200") {
-                                            error("SecureCloud response code was ${code}")
+                                            error("SecureCloud HTTP response status code was ${code}")
                                     }
                                     response = sh(script: "cat ${outputFilename}", returnStdout: true).trim()
                                     workloadsCount = sh(script: "jq '[.workloads[]] | length' ${outputFilename}", returnStdout: true).trim() as Integer
@@ -43,9 +41,6 @@ podTemplate(containers: [containerTemplate(name: 'alpine-curl-jq', image: 'dwdra
                                     containerSecurityContextRisks = sh(script: "jq '[.workloads[].containers?[].risks?[] | select(.exempted == false)] | unique' ${outputFilename}", returnStdout: true).trim()
                                     containerSecurityContextRisksCount = sh(script: "jq '[.workloads[].containers?[].risks?[] | select(.exempted == false)] | unique | length' ${outputFilename}", returnStdout: true).trim() as Integer
 
-                                    echo "${podSecurityContextRisksCount} Pod Security Context Risks: ${podSecurityContextRisks}"
-                                    echo "${containerSecurityContextRisksCount} Container Security Context Risks: ${containerSecurityContextRisks}"
-                                        
                                     msg = ""
                                     shortMsg = ""
                                     if (podSecurityContextRisksCount > 0) {
