@@ -1,6 +1,4 @@
-podTemplate(containers: [
-        containerTemplate(name: 'tufin', image: 'eu.gcr.io/dream-198012/tufin-cloud-deployer:1.0.0-master', command: 'sleep', args: '99d')
-    ]) {
+podTemplate(containers: [containerTemplate(name: 'alpine-curl-jq', image: 'dwdraju/alpine-curl-jq', command: 'sleep', args: '99d')]) {
     
     node(POD_LABEL) {
             
@@ -17,7 +15,7 @@ podTemplate(containers: [
         }
             
         stage('SecureCloud workload security check'){
-            container('tufin') {
+            container('alpine-curl-jq') {
                 withCredentials([string(credentialsId: 'jenkins-securecloud-api-access-key', variable: 'TUFIN_API_ACCESS_KEY')]) {
                     withEnv([
                                 "TUFIN_DOMAIN=nir",
