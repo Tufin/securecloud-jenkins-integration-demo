@@ -35,6 +35,7 @@ podTemplate(containers: [
                                     if (code != "200") {
                                             error("SecureCloud response code was ${code}")
                                     }
+                                    response = sh(script: "cat ${outputFilename}", returnStdout: true).trim()
 
                                     podSecurityContextRisks = sh(script: "jq '[.workloads[].risks?[] | select(.exempted == false)] | unique' ${outputFilename}", returnStdout: true).trim()
                                     podSecurityContextRisksCount = sh(script: "jq '[.workloads[].risks?[] | select(.exempted == false)] | unique | length' ${outputFilename}", returnStdout: true).trim() as Integer
@@ -50,10 +51,11 @@ podTemplate(containers: [
                                             msg = msg + "${podSecurityContextRisksCount} Pod Security Context Risks: ${podSecurityContextRisks} \n"
                                     }
                                     if (containerSecurityContextRisksCount > 0) { 
-                                            msg = msg + "${containerSecurityContextRisksCount} Container Security Context Risks: ${containerSecurityContextRisks}"
+                                            msg = msg + "${containerSecurityContextRisksCount} Container Security Context Risks: ${containerSecurityContextRisks} \n"
                                     }
                                     if (msg != "") { 
-                                            error("SecureCloud workload security check found:\n ${msg}")
+                                            msg = msg + "SecureCloud full workload security check response:\n" + response
+                                            error("SecureCloud workload security check found:\n ${msg}\nCheck SecureCloud response for full details")
                                     } else {
                                             echo "SecureCloud workload security check passed"
                                     }
