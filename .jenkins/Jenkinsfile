@@ -29,12 +29,15 @@ podTemplate(containers: [
                                     .trim()
                                     .tokenize("\n")
                             echo "HTTP response status code: $code"
+                            writeFile(file: '${WORKSPACE}${filename}.response.txt', text: response)
                             
-                            podSecurityContextRisks = sh(script: "jq -n '${response}|[.workloads[].risks?[] | select(.exempted == false)] | unique'", returnStdout: true)
-                            podSecurityContextRisksCount = sh(script: "jq -n '${podSecurityContextRisks}|length'", returnStdout: true)
+                            podSecurityContextRisks = sh(script: "jq '[.workloads[].risks?[] | select(.exempted == false)] | unique' ${WORKSPACE}${filename}.response.txt", returnStdout: true)
+                            writeFile(file: '${WORKSPACE}${filename}.podSecurityContextRisks.txt', text: podSecurityContextRisks)
+                            podSecurityContextRisksCount = sh(script: "jq 'length' ${WORKSPACE}${filename}.podSecurityContextRisks.txt", returnStdout: true)
 
-                            containerSecurityContextRisks = sh(script: "jq -n '${response}|[.workloads[].containers?[].risks?[] | select(.exempted == false)] | unique'", returnStdout: true)
-                            containerSecurityContextRisksCount = sh(script: "jq -n '${containerSecurityContextRisks}|length'", returnStdout: true)
+                            containerSecurityContextRisks = sh(script: "jq '[.workloads[].containers?[].risks?[] | select(.exempted == false)] | unique' ${WORKSPACE}${filename}.response.txt", returnStdout: true)
+                            writeFile(file: '${WORKSPACE}${filename}.containerSecurityContextRisks.txt', text: podSecurityContextRisks)
+                            containerSecurityContextRisksCount = sh(script: "jq 'length' ${WORKSPACE}${filename}.containerSecurityContextRisks.txt", returnStdout: true)
 
                             echo "${podSecurityContextRisksCount} Pod Security Context Risks: ${podSecurityContextRisks}"
                             echo "${containerSecurityContextRisksCount} Container Security Context Risks: ${containerSecurityContextRisks}"
