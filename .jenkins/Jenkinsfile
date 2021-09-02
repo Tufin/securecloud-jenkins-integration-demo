@@ -36,6 +36,8 @@ podTemplate(containers: [
                                             error("SecureCloud response code was ${code}")
                                     }
                                     response = sh(script: "cat ${outputFilename}", returnStdout: true).trim()
+                                    workloadsCount = sh(script: "jq '[.workloads[]] | length' ${outputFilename}", returnStdout: true).trim() as Integer
+                                    containersCount = sh(script: "jq '[.workloads[].containers?[]] | length' ${outputFilename}", returnStdout: true).trim() as Integer
 
                                     podSecurityContextRisks = sh(script: "jq '[.workloads[].risks?[] | select(.exempted == false)] | unique' ${outputFilename}", returnStdout: true).trim()
                                     podSecurityContextRisksCount = sh(script: "jq '[.workloads[].risks?[] | select(.exempted == false)] | unique | length' ${outputFilename}", returnStdout: true).trim() as Integer
@@ -54,10 +56,10 @@ podTemplate(containers: [
                                             msg = msg + "${containerSecurityContextRisksCount} Container Security Context Risks: ${containerSecurityContextRisks} \n"
                                     }
                                     if (msg != "") { 
-                                            msg = msg + "SecureCloud full workload security check response:\n" + response
-                                            error("SecureCloud workload security check found:\n ${msg}\nCheck SecureCloud response for full details")
+                                            msg = msg + "Across ${workloadsCount} workloads with ${containersCount} containers\nSecureCloud workload security check full response:\n" + response
+                                            error("SecureCloud workload security check found:\n ${msg}")
                                     } else {
-                                            echo "SecureCloud workload security check passed"
+                                            echo "SecureCloud workload security check for ${workloadsCount} workloads with ${containersCount} containers passed"
                                     }
                                 }
                         }
