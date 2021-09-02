@@ -2,6 +2,10 @@ podTemplate(containers: [
         containerTemplate(name: 'tufin', image: 'eu.gcr.io/dream-198012/tufin-cloud-deployer:1.0.0-master', command: 'sleep', args: '99d')
     ]) {
     node(POD_LABEL) {
+        environment {
+            TUFIN_API_ACCESS_KEY = credentials('jenkins-securecloud-api-access-key')
+            filename = '/k8s/app.yaml'
+        }
         stage('build go code') {
             sh 'echo "go build ./..."'
             sh 'sleep 1'
@@ -13,10 +17,6 @@ podTemplate(containers: [
         stage('Tufin SecureCloud integration'){
             container('tufin') {
                 stage('SecureCloud workload security check') {
-                    environment {
-                        TUFIN_API_ACCESS_KEY = credentials('jenkins-securecloud-api-access-key')
-                        filename = '/k8s/app.yaml'
-                    }
                     script {
                         final String url = "https://nir.securecloudtestnir.tufin.io/api/v1/orca/model/cross-cluster/workload-risks"
                         final def (String response, int code) =
