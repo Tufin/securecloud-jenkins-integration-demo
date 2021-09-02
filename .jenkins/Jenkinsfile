@@ -30,11 +30,11 @@ podTemplate(containers: [
                                     .tokenize("\n")
                             echo "HTTP response status code: $code"
 
-                            podSecurityContextRisks = sh(script: "echo ${response} | jq '[.workloads[].risks[] | select(.exempted == false)] | unique)'", returnStdout: true)
-                            podSecurityContextRisksCount = sh(script: "echo ${podSecurityContextRisks} | jq length", returnStdout: true)
+                            podSecurityContextRisks = sh(script: "echo \"${response}\" | jq '[.workloads[].risks[] | select(.exempted == false)] | unique)'", returnStdout: true)
+                            podSecurityContextRisksCount = sh(script: "echo \"${podSecurityContextRisks}\" | jq length", returnStdout: true)
 
-                            containerSecurityContextRisks = sh(script: "echo ${response} | jq '[.workloads[].containers[].risks[] | select(.exempted == false)] | unique)'", returnStdout: true)
-                            containerSecurityContextRisksCount = sh(script: "echo ${containerSecurityContextRisks} | jq length", returnStdout: true)
+                            containerSecurityContextRisks = sh(script: "echo \"${response}\" | jq '[.workloads[].containers[].risks[] | select(.exempted == false)] | unique)'", returnStdout: true)
+                            containerSecurityContextRisksCount = sh(script: "echo \"${containerSecurityContextRisks}\" | jq length", returnStdout: true)
 
                             echo "${podSecurityContextRisksCount} Pod Security Context Risks: ${podSecurityContextRisks}"
                             echo "${containerSecurityContextRisksCount} Container Security Context Risks: ${containerSecurityContextRisks}"
