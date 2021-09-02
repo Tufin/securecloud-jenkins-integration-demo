@@ -1,19 +1,22 @@
 podTemplate(containers: [
         containerTemplate(name: 'tufin', image: 'eu.gcr.io/dream-198012/tufin-cloud-deployer:1.0.0-master', command: 'sleep', args: '99d')
     ]) {
-    environment {
-        TUFIN_API_ACCESS_KEY = credentials('jenkins-securecloud-api-access-key')
-        filename = '/k8s/app.yaml'
-    }
+    
+    env.TUFIN_API_ACCESS_KEY = credentials('jenkins-securecloud-api-access-key')
+    env.filename = '/k8s/app.yaml'
+
     node(POD_LABEL) {
+            
         stage('build go code') {
             sh 'echo "go build ./..."'
             sh 'sleep 1'
         }
+
         stage('build docker image'){
             sh 'echo "docker build my-image"'
             sh 'sleep 1'
         }
+            
         stage('Tufin SecureCloud integration'){
             container('tufin') {
                 stage('SecureCloud workload security check') {
