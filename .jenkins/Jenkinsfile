@@ -20,7 +20,7 @@ podTemplate(containers: [
                     withCredentials([string(credentialsId: 'jenkins-securecloud-api-access-key', variable: 'TUFIN_API_ACCESS_KEY')]) {
                         script {
                             final String filename = '/k8s/app.yaml'
-                            sh 'cat ${WORKSPACE}$filename}'
+                            sh 'cat ${WORKSPACE}${filename}'
 
                             final String url = "https://nir.securecloudtestnir.tufin.io/api/v1/orca/model/cross-cluster/workload-risks"
                             final def (String response, int code) =
