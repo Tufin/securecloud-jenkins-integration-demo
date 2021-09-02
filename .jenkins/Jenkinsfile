@@ -19,11 +19,14 @@ podTemplate(containers: [
                 stage('SecureCloud workload security check') {
                     withCredentials([string(credentialsId: 'jenkins-securecloud-api-access-key', variable: 'TUFIN_API_ACCESS_KEY')]) {
                         script {
-                            final String filename = '/k8s/app.yaml'    
-                            sh 'ls ${WORKSPACE}'
+                            filename = '/k8s/app.yaml'
+                            lsResult = sh(script: "ls ${WORKSPACE}", returnStdout: true)
+                            echo "${lsResult}"
                             echo "****"
                             echo "${WORKSPACE}${filename}"
-                            sh 'cat ${WORKSPACE}${filename}'
+                            echo "****"
+                            catResult = sh(script: "cat ${WORKSPACE}${filename}", returnStdout: true)
+                            echo "${catResult}"
 
                             final String url = "https://nir.securecloudtestnir.tufin.io/api/v1/orca/model/cross-cluster/workload-risks"
                             final def (String response, int code) =
