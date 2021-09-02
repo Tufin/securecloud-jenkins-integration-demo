@@ -3,16 +3,12 @@ podTemplate(containers: [
     ]) {
     node(POD_LABEL) {
         stage('build go code') {
-            steps {
-                sh 'echo "go build ./..."'
-                sh 'sleep 1'
-            }
+            sh 'echo "go build ./..."'
+            sh 'sleep 1'
         }
         stage('build docker image'){
-            steps {
-                sh 'echo "docker build my-image"'
-                sh 'sleep 1'
-            }
+            sh 'echo "docker build my-image"'
+            sh 'sleep 1'
         }
         stage('Tufin SecureCloud integration'){
             container('tufin') {
