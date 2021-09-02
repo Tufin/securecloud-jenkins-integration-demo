@@ -20,24 +20,25 @@ podTemplate(containers: [
             container('tufin') {
                 stage('SecureCloud workload security check') {
                     withCredentials([string(credentialsId: 'jenkins-securecloud-api-access-key', variable: 'TUFIN_API_ACCESS_KEY')]) {
-                        parameters {
-                                string(name: 'inputFilename', defaultValue: "${WORKSPACE}/k8s/app.yaml")
-                                string(name: 'outputFilename', defaultValue: "${WORKSPACE}/k8s/app.yaml.response.json")
-                        }
-                        script {
-                            url = "https://nir.securecloudtestnir.tufin.io/api/v1/orca/model/cross-cluster/workload-risks"
-                            code = sh(script: 'curl -X POST -s -w "%{response_code}" $url -H "Authorization: Bearer ${TUFIN_API_ACCESS_KEY}" -H "Content-Type: application/octet-stream" --data-binary @${inputFilename} -o ${outputFilename}', returnStdout: true).trim()
-                                
-                            echo "HTTP response status code: ${code}"
-                            
-                            podSecurityContextRisks = sh(script: "jq '[.workloads[].risks?[] | select(.exempted == false)] | unique' ${outputFilename}", returnStdout: true).trim()
-                            podSecurityContextRisksCount = sh(script: "jq '[.workloads[].risks?[] | select(.exempted == false)] | unique | length' ${outputFilename}", returnStdout: true).trim()
+                        withEnv([
+                                        "inputFilename=${WORKSPACE}/k8s/app.yaml",
+                                        "outputFilename=${WORKSPACE}/k8s/app.yaml.response.json",
+                                        "url=https://nir.securecloudtestnir.tufin.io/api/v1/orca/model/cross-cluster/workload-risks"
+                                ]) {
+                                script {
+                                    code = sh(script: 'curl -X POST -s -w "%{response_code}" $url -H "Authorization: Bearer ${TUFIN_API_ACCESS_KEY}" -H "Content-Type: application/octet-stream" --data-binary @${inputFilename} -o ${outputFilename}', returnStdout: true).trim()
 
-                            containerSecurityContextRisks = sh(script: "jq '[.workloads[].containers?[].risks?[] | select(.exempted == false)] | unique' ${outputFilename}", returnStdout: true).trim()
-                            containerSecurityContextRisksCount = sh(script: "jq '[.workloads[].containers?[].risks?[] | select(.exempted == false)] | unique | length' ${outputFilename}", returnStdout: true).trim()
+                                    echo "HTTP response status code: ${code}"
 
-                            echo "${podSecurityContextRisksCount} Pod Security Context Risks: ${podSecurityContextRisks}"
-                            echo "${containerSecurityContextRisksCount} Container Security Context Risks: ${containerSecurityContextRisks}"
+                                    podSecurityContextRisks = sh(script: "jq '[.workloads[].risks?[] | select(.exempted == false)] | unique' ${outputFilename}", returnStdout: true).trim()
+                                    podSecurityContextRisksCount = sh(script: "jq '[.workloads[].risks?[] | select(.exempted == false)] | unique | length' ${outputFilename}", returnStdout: true).trim()
+
+                                    containerSecurityContextRisks = sh(script: "jq '[.workloads[].containers?[].risks?[] | select(.exempted == false)] | unique' ${outputFilename}", returnStdout: true).trim()
+                                    containerSecurityContextRisksCount = sh(script: "jq '[.workloads[].containers?[].risks?[] | select(.exempted == false)] | unique | length' ${outputFilename}", returnStdout: true).trim()
+
+                                    echo "${podSecurityContextRisksCount} Pod Security Context Risks: ${podSecurityContextRisks}"
+                                    echo "${containerSecurityContextRisksCount} Container Security Context Risks: ${containerSecurityContextRisks}"
+                                }
                         }
                     }
                 }
