@@ -64,6 +64,7 @@ podTemplate(containers: [
                                             echo "SecureCloud workload security check found:\n${msg}"
                                             error("SecureCloud workload security check found:\n${shortMsg}")
                                     } else {
+                                            echo "SecureCloud workload security check full response:\n" + response
                                             echo "SecureCloud workload security check for ${workloadsCount} workloads with ${containersCount} containers passed"
                                     }
                                 }
