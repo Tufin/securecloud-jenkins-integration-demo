@@ -32,7 +32,7 @@ podTemplate(containers: [
                                     code = sh(script: 'curl -X POST -s -w "%{response_code}" $url -H "Authorization: Bearer ${TUFIN_API_ACCESS_KEY}" -H "Content-Type: application/octet-stream" --data-binary @${inputFilename} -o ${outputFilename}', returnStdout: true).trim()
 
                                     echo "HTTP response status code: ${code}"
-                                    sh "[[ \"${code}\" -ne \"200\" ]] && exit 1"
+                                    sh "[ \"${code}\" -ne \"200\" ] && exit 1"
 
                                     podSecurityContextRisks = sh(script: "jq '[.workloads[].risks?[] | select(.exempted == false)] | unique' ${outputFilename}", returnStdout: true).trim()
                                     podSecurityContextRisksCount = sh(script: "jq '[.workloads[].risks?[] | select(.exempted == false)] | unique | length' ${outputFilename}", returnStdout: true).trim()
@@ -42,8 +42,9 @@ podTemplate(containers: [
 
                                     echo "${podSecurityContextRisksCount} Pod Security Context Risks: ${podSecurityContextRisks}"
                                     echo "${containerSecurityContextRisksCount} Container Security Context Risks: ${containerSecurityContextRisks}"
-                                    sh "[[ \"${podSecurityContextRisksCount}\" -gt \"0\" ]] && exit 1"
-                                    sh "[[ \"${containerSecurityContextRisksCount}\" -gt \"0\" ]] && exit 1"
+                                        
+                                    sh "[ \"${podSecurityContextRisksCount}\" -gt \"0\" ] && exit 1"
+                                    sh "[ \"${containerSecurityContextRisksCount}\" -gt \"0\" ] && exit 1"
                                 }
                         }
                     }
