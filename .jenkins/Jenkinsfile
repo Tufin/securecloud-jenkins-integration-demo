@@ -1,6 +1,7 @@
-pipeline {
-    agent { docker { image "eu.gcr.io/dream-198012/tufin-cloud-deployer:1.0.0-master" } }
-    stages {
+podTemplate(containers: [
+        containerTemplate(name: 'tufin', image: 'eu.gcr.io/dream-198012/tufin-cloud-deployer:1.0.0-master', command: 'sleep', args: '99d')
+    ]) {
+    node(POD_LABEL) {
         stage('build go code') {
             steps {
                 sh 'echo "go build ./..."'
@@ -13,28 +14,30 @@ pipeline {
                 sh 'sleep 1'
             }
         }
-        stage('SecureCloud workload security check'){
-            environment {
-                TUFIN_API_ACCESS_KEY = credentials('jenkins-securecloud-api-access-key')
-                filename = '/k8s/app.yaml'
-            }
-            steps {
-                script {
-                    final String url = "https://nir.securecloudtestnir.tufin.io/api/v1/orca/model/cross-cluster/workload-risks"
-                    final def (String response, int code) =
-                        sh(script: "curl -X POST -s -w '\\n%{response_code}' $url -H 'Authorization: Bearer $TUFIN_API_ACCESS_KEY' -H 'Content-Type: application/octet-stream' --data-binary '@${WORKSPACE}${filename}'", returnStdout: true)
-                            .trim()
-                            .tokenize("\n")
-                    echo "HTTP response status code: $code"
-                    
-                    podSecurityContextRisks = sh(script: "echo ${response} | jq '[.workloads[].risks[] | select(.exempted == false)] | unique)'", returnStdout: true)
-                    podSecurityContextRisksCount = sh(script: "echo ${podSecurityContextRisks} | jq length", returnStdout: true)
-                    
-                    containerSecurityContextRisks = sh(script: "echo ${response} | jq '[.workloads[].containers[].risks[] | select(.exempted == false)] | unique)'", returnStdout: true)
-                    containerSecurityContextRisksCount = sh(script: "echo ${containerSecurityContextRisks} | jq length", returnStdout: true)
-                    
-                    echo "${podSecurityContextRisksCount} Pod Security Context Risks: ${podSecurityContextRisks}"
-                    echo "${containerSecurityContextRisksCount} Container Security Context Risks: ${containerSecurityContextRisks}"
+        stage('Tufin SecureCloud integration'){
+            container('tufin') {
+                environment {
+                    TUFIN_API_ACCESS_KEY = credentials('jenkins-securecloud-api-access-key')
+                    filename = '/k8s/app.yaml'
+                }
+                stage('SecureCloud workload security check') {
+                    script {
+                        final String url = "https://nir.securecloudtestnir.tufin.io/api/v1/orca/model/cross-cluster/workload-risks"
+                        final def (String response, int code) =
+                            sh(script: "curl -X POST -s -w '\\n%{response_code}' $url -H 'Authorization: Bearer $TUFIN_API_ACCESS_KEY' -H 'Content-Type: application/octet-stream' --data-binary '@${WORKSPACE}${filename}'", returnStdout: true)
+                                .trim()
+                                .tokenize("\n")
+                        echo "HTTP response status code: $code"
+
+                        podSecurityContextRisks = sh(script: "echo ${response} | jq '[.workloads[].risks[] | select(.exempted == false)] | unique)'", returnStdout: true)
+                        podSecurityContextRisksCount = sh(script: "echo ${podSecurityContextRisks} | jq length", returnStdout: true)
+
+                        containerSecurityContextRisks = sh(script: "echo ${response} | jq '[.workloads[].containers[].risks[] | select(.exempted == false)] | unique)'", returnStdout: true)
+                        containerSecurityContextRisksCount = sh(script: "echo ${containerSecurityContextRisks} | jq length", returnStdout: true)
+
+                        echo "${podSecurityContextRisksCount} Pod Security Context Risks: ${podSecurityContextRisks}"
+                        echo "${containerSecurityContextRisksCount} Container Security Context Risks: ${containerSecurityContextRisks}"
+                    }
                 }
             }
         }
