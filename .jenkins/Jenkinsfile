@@ -29,14 +29,14 @@ podTemplate(containers: [
                                     .trim()
                                     .tokenize("\n")
                             echo "HTTP response status code: $code"
-                            writeFile file: '${WORKSPACE}${filename}.response.txt', text: '${response}'
+                            echo "$response" >> "${WORKSPACE}${filename}.response.txt"
                             
                             podSecurityContextRisks = sh(script: "jq '[.workloads[].risks?[] | select(.exempted == false)] | unique' ${WORKSPACE}${filename}.response.txt", returnStdout: true)
-                            writeFile file: '${WORKSPACE}${filename}.podSecurityContextRisks.txt', text: '${podSecurityContextRisks}'
+                            echo "$podSecurityContextRisks" >> "${WORKSPACE}${filename}.podSecurityContextRisks.txt"
                             podSecurityContextRisksCount = sh(script: "jq 'length' ${WORKSPACE}${filename}.podSecurityContextRisks.txt", returnStdout: true)
 
                             containerSecurityContextRisks = sh(script: "jq '[.workloads[].containers?[].risks?[] | select(.exempted == false)] | unique' ${WORKSPACE}${filename}.response.txt", returnStdout: true)
-                            writeFile file: '${WORKSPACE}${filename}.containerSecurityContextRisks.txt', text: '${containerSecurityContextRisks}'
+                            echo "$containerSecurityContextRisks" >> "${WORKSPACE}${filename}.containerSecurityContextRisks.txt"
                             containerSecurityContextRisksCount = sh(script: "jq 'length' ${WORKSPACE}${filename}.containerSecurityContextRisks.txt", returnStdout: true)
 
                             echo "${podSecurityContextRisksCount} Pod Security Context Risks: ${podSecurityContextRisks}"
