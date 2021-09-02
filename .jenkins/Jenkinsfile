@@ -21,23 +21,21 @@ podTemplate(containers: [
                 stage('SecureCloud workload security check') {
                     withCredentials([string(credentialsId: 'jenkins-securecloud-api-access-key', variable: 'TUFIN_API_ACCESS_KEY')]) {
                         script {
-                            filename = '/k8s/app.yaml'
+                            inputFilename = '/k8s/app.yaml'
+                            outputFilename = '${WORKSPACE}${filename}.response.json'
 
                             final String url = "https://nir.securecloudtestnir.tufin.io/api/v1/orca/model/cross-cluster/workload-risks"
                             final def (String response, int code) =
-                                sh(script: "curl -X POST -s -w '\\n%{response_code}' $url -H 'Authorization: Bearer ${TUFIN_API_ACCESS_KEY}' -H 'Content-Type: application/octet-stream' --data-binary '@${WORKSPACE}${filename}'", returnStdout: true)
+                                sh(script: "curl -X POST -s -w '\\n%{response_code}' $url -H 'Authorization: Bearer ${TUFIN_API_ACCESS_KEY}' -H 'Content-Type: application/octet-stream' --data-binary '@${inputFilename}' -o ${outputFilename}", returnStdout: true)
                                     .trim()
                                     .tokenize("\n")
                             echo "HTTP response status code: $code"
-                            sh(script: "echo ${response} >> ${WORKSPACE}${filename}.response.txt")
                             
-                            podSecurityContextRisks = sh(script: "jq '[.workloads[].risks?[] | select(.exempted == false)] | unique' ${WORKSPACE}${filename}.response.txt", returnStdout: true)
-                            sh(script: "echo ${podSecurityContextRisks} >> ${WORKSPACE}${filename}.podSecurityContextRisks.txt")
-                            podSecurityContextRisksCount = sh(script: "jq 'length' ${WORKSPACE}${filename}.podSecurityContextRisks.txt", returnStdout: true)
+                            podSecurityContextRisks = sh(script: "jq '[.workloads[].risks?[] | select(.exempted == false)] | unique' ${outputFilename}", returnStdout: true)
+                            podSecurityContextRisksCount = sh(script: "jq '[.workloads[].risks?[] | select(.exempted == false)] | unique | length' ${outputFilename}", returnStdout: true)
 
-                            containerSecurityContextRisks = sh(script: "jq '[.workloads[].containers?[].risks?[] | select(.exempted == false)] | unique' ${WORKSPACE}${filename}.response.txt", returnStdout: true)
-                            sh(script: "echo ${containerSecurityContextRisks} >> ${WORKSPACE}${filename}.containerSecurityContextRisks.txt")
-                            containerSecurityContextRisksCount = sh(script: "jq 'length' ${WORKSPACE}${filename}.containerSecurityContextRisks.txt", returnStdout: true)
+                            containerSecurityContextRisks = sh(script: "jq '[.workloads[].containers?[].risks?[] | select(.exempted == false)] | unique' ${outputFilename}", returnStdout: true)
+                            containerSecurityContextRisksCount = sh(script: "jq '[.workloads[].containers?[].risks?[] | select(.exempted == false)] | unique | length' ${outputFilename}", returnStdout: true)
 
                             echo "${podSecurityContextRisksCount} Pod Security Context Risks: ${podSecurityContextRisks}"
                             echo "${containerSecurityContextRisksCount} Container Security Context Risks: ${containerSecurityContextRisks}"
