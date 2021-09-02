@@ -20,10 +20,11 @@ podTemplate(containers: [
             container('tufin') {
                 stage('SecureCloud workload security check') {
                     withCredentials([string(credentialsId: 'jenkins-securecloud-api-access-key', variable: 'TUFIN_API_ACCESS_KEY')]) {
+                        parameters {
+                                string(name: 'inputFilename', defaultValue: "${WORKSPACE}/k8s/app.yaml")
+                                string(name: 'outputFilename', defaultValue: "${WORKSPACE}/k8s/app.yaml.response.json")
+                        }
                         script {
-                            inputFilename = "${WORKSPACE}/k8s/app.yaml"
-                            outputFilename = "${inputFilename}.response.json"
-
                             url = "https://nir.securecloudtestnir.tufin.io/api/v1/orca/model/cross-cluster/workload-risks"
                             code = sh(script: 'curl -X POST -s -w "%{response_code}" $url -H "Authorization: Bearer $TUFIN_API_ACCESS_KEY" -H "Content-Type: application/octet-stream" --data-binary @$inputFilename -o $outputFilename', returnStdout: true).trim()
                                 
