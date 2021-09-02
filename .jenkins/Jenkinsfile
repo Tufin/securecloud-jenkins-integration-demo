@@ -28,10 +28,11 @@ podTemplate(containers: [
                                         "outputFilename=${WORKSPACE}${TUFIN_INPUT_FILENAME}.response.json",
                                         "url=https://${TUFIN_DOMAIN}.securecloudtestnir.tufin.io/api/v1/orca/model/cross-cluster/workload-risks"
                                 ]) {
-                                script {
+                                steps {
                                     code = sh(script: 'curl -X POST -s -w "%{response_code}" $url -H "Authorization: Bearer ${TUFIN_API_ACCESS_KEY}" -H "Content-Type: application/octet-stream" --data-binary @${inputFilename} -o ${outputFilename}', returnStdout: true).trim()
 
                                     echo "HTTP response status code: ${code}"
+                                    sh "${code}"
 
                                     podSecurityContextRisks = sh(script: "jq '[.workloads[].risks?[] | select(.exempted == false)] | unique' ${outputFilename}", returnStdout: true).trim()
                                     podSecurityContextRisksCount = sh(script: "jq '[.workloads[].risks?[] | select(.exempted == false)] | unique | length' ${outputFilename}", returnStdout: true).trim()
