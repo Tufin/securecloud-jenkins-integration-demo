@@ -11,12 +11,12 @@ podTemplate(containers: [
             sh 'sleep 1'
         }
         stage('Tufin SecureCloud integration'){
-            environment {
-                TUFIN_API_ACCESS_KEY = credentials('jenkins-securecloud-api-access-key')
-                filename = '/k8s/app.yaml'
-            }
             container('tufin') {
                 stage('SecureCloud workload security check') {
+                    environment {
+                        TUFIN_API_ACCESS_KEY = credentials('jenkins-securecloud-api-access-key')
+                        filename = '/k8s/app.yaml'
+                    }
                     script {
                         final String url = "https://nir.securecloudtestnir.tufin.io/api/v1/orca/model/cross-cluster/workload-risks"
                         final def (String response, int code) =
