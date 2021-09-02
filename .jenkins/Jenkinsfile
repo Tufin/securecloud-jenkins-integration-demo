@@ -4,16 +4,6 @@ podTemplate(containers: [containerTemplate(name: 'alpine-curl-jq', image: 'dwdra
             
         checkout scm
             
-        stage('build go code') {
-            sh 'echo "go build ./..."'
-            sh 'sleep 1'
-        }
-
-        stage('build docker image'){
-            sh 'echo "docker build my-image"'
-            sh 'sleep 1'
-        }
-            
         stage('SecureCloud workload security check'){
             container('alpine-curl-jq') {
                 withCredentials([string(credentialsId: 'jenkins-securecloud-api-access-key', variable: 'TUFIN_API_ACCESS_KEY')]) {
