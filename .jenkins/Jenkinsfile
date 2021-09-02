@@ -45,8 +45,14 @@ podTemplate(containers: [
                                     echo "${podSecurityContextRisksCount} Pod Security Context Risks: ${podSecurityContextRisks}"
                                     echo "${containerSecurityContextRisksCount} Container Security Context Risks: ${containerSecurityContextRisks}"
                                         
-                                    if (podSecurityContextRisksCount > 0 || containerSecurityContextRisksCount > 0) {
-                                            msg = "${podSecurityContextRisksCount} Pod Security Context Risks: ${podSecurityContextRisks} \n${containerSecurityContextRisksCount} Container Security Context Risks: ${containerSecurityContextRisks}"
+                                    msg = ""
+                                    if (podSecurityContextRisksCount > 0) {
+                                            msg = msg + "${podSecurityContextRisksCount} Pod Security Context Risks: ${podSecurityContextRisks} \n"
+                                    }
+                                    if (containerSecurityContextRisksCount > 0) { 
+                                            msg = msg + "${containerSecurityContextRisksCount} Container Security Context Risks: ${containerSecurityContextRisks}"
+                                    }
+                                    if (msg != "") { 
                                             error("SecureCloud workload security check found:\n ${msg}")
                                     } else {
                                             echo "SecureCloud workload security check passed"
