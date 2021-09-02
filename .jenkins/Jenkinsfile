@@ -16,9 +16,8 @@ podTemplate(containers: [
             sh 'sleep 1'
         }
             
-        stage('Tufin SecureCloud integration'){
+        stage('SecureCloud workload security check'){
             container('tufin') {
-                stage('SecureCloud workload security check') {
                     withCredentials([string(credentialsId: 'jenkins-securecloud-api-access-key', variable: 'TUFIN_API_ACCESS_KEY')]) {
                         withEnv([
                                         "inputFilename=${WORKSPACE}/k8s/app.yaml",
@@ -41,7 +40,6 @@ podTemplate(containers: [
                                 }
                         }
                     }
-                }
             }
         }
     }
