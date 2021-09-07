@@ -1,4 +1,4 @@
-node {
+node(POD_LABEL) {
   
   checkout scm
   
