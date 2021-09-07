@@ -4,6 +4,8 @@ podTemplate(containers: [containerTemplate(name: 'alpine-curl-jq', image: 'dwdra
             
         checkout scm
         
-        tufinSecureCloudWorkloadSecurityCheck filename:'./k8s/app.yaml'  
+        tufinSecureCloudWorkloadSecurityCheck filename:"${WORKSPACE}/k8s/app.yaml"
+        
     }
+    
 }
