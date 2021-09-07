@@ -1,9 +1,9 @@
 pipeline {
     agent any
     stages {
-            
-        checkout scm
-        
+        stage('Checkoud') {
+            checkout scm
+        }
         stage('SecureCloud workload security check'){
             steps {
                 tufinSecureCloudWorkloadSecurityCheck filename:"${WORKSPACE}/k8s/app.yaml"
