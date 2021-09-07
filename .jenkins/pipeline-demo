@@ -1,4 +1,4 @@
-pipeline {
+node {
   
   tufinSecureCloudWorkloadSecurityCheck './k8s/app.yaml'
   
