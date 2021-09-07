@@ -12,9 +12,9 @@ podTemplate(containers: [containerTemplate(name: 'alpine-curl-jq', image: 'dwdra
                     script {
                         response = sh(script: "cat ${TUFIN_INPUT_FILENAME}", returnStdout: true).trim()
                         echo response
+
+                        tufinSecureCloudWorkloadSecurityCheck filename:"${WORKSPACE}/k8s/app.yaml"
                     }
-                    tufinSecureCloudWorkloadSecurityCheck filename:"${WORKSPACE}/k8s/app.yaml"
-                    
                 }
             }
         }
