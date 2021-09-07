@@ -1,5 +1,5 @@
  
-  checkout scm
+  checkout
   
   tufinSecureCloudWorkloadSecurityCheck filename:'./k8s/app.yaml'
 
