@@ -1,16 +1,3 @@
 pipeline {
-    agent any
-    stages {
-        stage('Checkoud') {
-            steps {
-                checkout scm
-            }
-        }
-        stage('SecureCloud workload security check'){
-            steps {
-                readFile("${WORKSPACE}/k8s/app.yaml")
-                tufinSecureCloudWorkloadSecurityCheck filename:"${WORKSPACE}/k8s/app.yaml"
-            }
-        }        
-    }
+    tufinSecureCloudWorkloadSecurityCheck filename:"${WORKSPACE}/k8s/app.yaml"
 }
