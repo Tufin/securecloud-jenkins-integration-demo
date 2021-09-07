@@ -1,4 +1,11 @@
 node {
-  agent any
+  stages {
+        stage('Hello') {
+            steps {
+                echo 'Hello World'
+                greet 'nir'
+            }
+        }
+    }
   tufinSecureCloudWorkloadSecurityCheck filename:'./k8s/app.yaml'
 }
