@@ -1,0 +1,1 @@
+tufinSecureCloudWorkloadSecurityCheck './k8s/app.yaml'
