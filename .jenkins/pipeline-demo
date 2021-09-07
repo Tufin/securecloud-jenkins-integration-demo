@@ -1,6 +1,4 @@
-node {
-  step {
-    checkout
-  }
-  tufinSecureCloudWorkloadSecurityCheck filename:'./k8s/app.yaml'
+node { 
+    checkout scm
+    tufinSecureCloudWorkloadSecurityCheck filename:'./k8s/app.yaml'
 }
