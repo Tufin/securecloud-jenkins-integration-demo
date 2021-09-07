@@ -1,3 +1,7 @@
 node {
+  
+  checkout scm
+  
   tufinSecureCloudWorkloadSecurityCheck './k8s/app.yaml'
+  
 }
