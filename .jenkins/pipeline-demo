@@ -1,5 +1,7 @@
 node {
   
+  checkout
+  
   tufinSecureCloudWorkloadSecurityCheck './k8s/app.yaml'
   
 }
