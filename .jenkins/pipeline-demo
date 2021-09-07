@@ -1,3 +1,4 @@
 pipeline {
+    agent any
     tufinSecureCloudWorkloadSecurityCheck filename:'k8s/app.yaml'
 }
