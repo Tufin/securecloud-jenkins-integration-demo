@@ -1,11 +1,6 @@
 node {
-  stages {
-        stage('Hello') {
-            steps {
-                echo 'Hello World'
-                greet 'nir'
-            }
-        }
-    }
+  step {
+    checkout
+  }
   tufinSecureCloudWorkloadSecurityCheck filename:'./k8s/app.yaml'
 }
