@@ -1,24 +1,13 @@
-podTemplate(containers: [containerTemplate(name: 'alpine-curl-jq', image: 'dwdraju/alpine-curl-jq', command: 'sleep', args: '99d')]) {
-    
-    node(POD_LABEL) {
+pipeline {
+    agent any
+    stages {
             
         checkout scm
         
         stage('SecureCloud workload security check'){
-            container('alpine-curl-jq') {
-                withEnv([
-                            "TUFIN_INPUT_FILENAME=${WORKSPACE}/k8s/app.yaml"
-                        ]) {
-                    script {
-                        response = sh(script: "cat ${TUFIN_INPUT_FILENAME}", returnStdout: true).trim()
-                        echo response
-
-                        tufinSecureCloudWorkloadSecurityCheck filename:"${WORKSPACE}/k8s/app.yaml"
-                    }
-                }
+            steps {
+                tufinSecureCloudWorkloadSecurityCheck filename:"${WORKSPACE}/k8s/app.yaml"
             }
-        }
-        
+        }        
     }
-    
 }
