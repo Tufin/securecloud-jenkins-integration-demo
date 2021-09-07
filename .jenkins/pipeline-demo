@@ -1,5 +1,5 @@
- 
+step { 
   checkout
   
   tufinSecureCloudWorkloadSecurityCheck filename:'./k8s/app.yaml'
-
+}
