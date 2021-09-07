@@ -1,1 +1,3 @@
-tufinSecureCloudWorkloadSecurityCheck './k8s/app.yaml'
+node {
+  tufinSecureCloudWorkloadSecurityCheck './k8s/app.yaml'
+}
