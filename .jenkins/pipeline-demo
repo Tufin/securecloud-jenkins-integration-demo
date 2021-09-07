@@ -1,7 +1,5 @@
-node {
-  
+ 
   checkout scm
   
   tufinSecureCloudWorkloadSecurityCheck filename:'./k8s/app.yaml'
-  
-}
+
