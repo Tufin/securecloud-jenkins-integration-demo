@@ -1,4 +1,9 @@
-node { 
-    checkout scm
-    tufinSecureCloudWorkloadSecurityCheck filename:'./k8s/app.yaml'
+podTemplate(containers: [containerTemplate(name: 'alpine-curl-jq', image: 'dwdraju/alpine-curl-jq', command: 'sleep', args: '99d')]) {
+    
+    node(POD_LABEL) {
+            
+        checkout scm
+        
+        tufinSecureCloudWorkloadSecurityCheck filename:'./k8s/app.yaml'  
+    }
 }
