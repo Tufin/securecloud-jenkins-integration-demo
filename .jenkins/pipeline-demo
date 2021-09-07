@@ -1,6 +1,4 @@
-node {
-  
-  checkout
+pipeline {
   
   tufinSecureCloudWorkloadSecurityCheck './k8s/app.yaml'
   
