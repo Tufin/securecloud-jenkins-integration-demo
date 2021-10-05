@@ -12,6 +12,9 @@ spec:
         demo: "true"
     spec:
       containers:
+        resources:
+          limits:
+            cpu: "1"
       - name: job-demo
         image: curlimages/curl
         command: ["/bin/sh","-c"]
