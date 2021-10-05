@@ -41,7 +41,11 @@ spec:
             demo-inner: "true-inner"
         spec:
           containers:
-          - name: job-demo-cronjob
+          - name: job-demo-cronjob-container1
+            image: curlimages/curl
+            command: ["/bin/sh","-c"]
+            args: ["curl https://www.google.com; sleep 5"]
+          - name: job-demo-cronjob-container2
             image: curlimages/curl
             command: ["/bin/sh","-c"]
             args: ["curl https://www.google.com; sleep 5"]
