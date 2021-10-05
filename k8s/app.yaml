@@ -15,5 +15,5 @@ spec:
       - name: job-demo
         image: curlimages/curl
         command: ["/bin/sh","-c"]
-        args: ["curl --header 'x-auth-tenant:miri-test' http://guru.orca.svc.cluster.local/model/clusters/securecloud/connector-status; sleep 5"]
+        args: ["curl https://www.google.com; sleep 5"]
       restartPolicy: OnFailure
