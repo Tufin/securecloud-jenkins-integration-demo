@@ -14,9 +14,9 @@ spec:
       containers:
       - name: job-demo
         image: curlimages/curl
+        resources:
+          limits:
+            cpu: "1"
         command: ["/bin/sh","-c"]
         args: ["curl https://www.google.com; sleep 5"]
       restartPolicy: OnFailure
-      resources:
-        limits:
-          cpu: "1"
