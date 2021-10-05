@@ -1,0 +1,19 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: job-demo
+spec:
+  completions: 5
+  template:
+    metadata:
+      name: job-demo-2
+      labels:
+        app: curl
+        demo: "true"
+    spec:
+      containers:
+      - name: job-demo-2
+        image: curlimages/curl
+        command: ["/bin/sh","-c"]
+        args: ["curl https://www.google.com; sleep 5"]
+      restartPolicy: OnFailure
