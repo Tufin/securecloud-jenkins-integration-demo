@@ -1,0 +1,10 @@
+pipeline {
+    agent any
+    stages {
+        stage('SecureCloud workload security check') {
+            steps {
+                tufinSecureCloudWorkloadSecurityCheck filename:'k8s/app-fixed.yaml'
+            }
+        }
+    }
+}
