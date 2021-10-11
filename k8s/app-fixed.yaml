@@ -31,6 +31,7 @@ spec:
         resources:
           limits:
             cpu: 1
+            memory: 128Mi
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -65,6 +66,7 @@ spec:
         resources:
           limits:
             cpu: 1
+            memory: 64Mi
       - name: my-backend-container-2
         image: curlimages/curl
         command: ["/bin/sh","-c"]
@@ -81,3 +83,4 @@ spec:
         resources:
           limits:
             cpu: 1
+            memory: 64Mi
