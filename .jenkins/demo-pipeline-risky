@@ -3,7 +3,7 @@ pipeline {
     stages {
         stage('SecureCloud workload security check') {
             steps {
-                tufinSecureCloudWorkloadSecurityCheck filename:'k8s/app.yaml'
+                tufinSecureCloudWorkloadSecurityCheck filename:'k8s/app-risky.yaml'
             }
         }
     }
