@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-frontend
+  labels:
+    app: nginx
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      hostNetwork: true
+      containers:
+      - name: nginx
+        image: nginx:1.14.2
+        ports:
+        - containerPort: 80
+        securityContext:
+          privileged: true
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-backend-app
+  labels:
+    app: my-backend
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: my-backend
+  template:
+    metadata:
+      labels:
+        app: my-backend
+    spec:
+      hostPID: true
+      containers:
+      - name: my-backend-container-1
+        image: curlimages/curl
+        command: ["/bin/sh","-c"]
+        args: ["curl https://www.google.com; sleep 15"]
+      - name: my-backend-container-2
+        image: curlimages/curl
+        command: ["/bin/sh","-c"]
+        args: ["curl https://www.google.com; sleep 25"]
