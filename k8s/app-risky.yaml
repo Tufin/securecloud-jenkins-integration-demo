@@ -24,7 +24,7 @@ spec:
           privileged: true
 ---
 apiVersion: apps/v1
-kind: Deployment
+kind: DaemonSet
 metadata:
   name: my-backend-app
   labels:
