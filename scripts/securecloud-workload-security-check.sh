@@ -105,7 +105,7 @@ AnalyzeResponse() {
 		msg="${msg}Across ${workloadsCount} workloads with ${containersCount} containers\nSecureCloud workload security check full response:\n${response}\n"
 		shortMsg="${shortMsg}Across ${workloadsCount} workloads with ${containersCount} containers\n"
 		printf "SecureCloud workload security check found:\n${msg}\n"
-		if [[ "${failOnAnyRisk}" -ne "false" ]]; then
+		if [[ "${failOnAnyRisk}" != "false" ]]; then
 			printf "ERROR: SecureCloud workload security check found:\n${shortMsg}\n"
 			exit 1
 		fi
