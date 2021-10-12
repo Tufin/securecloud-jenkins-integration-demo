@@ -1,0 +1,14 @@
+pipeline {
+    agent any
+    stages {
+        stage('SecureCloud workload security check') {
+            withCredentials([string(credentialsId: 'jenkins-securecloud-api-access-key', variable: 'TUFIN_SECURECLOUD_API_KEY')]) {
+                withEnv(["TUFIN_SECURECLOUD_URL=https://nir.securecloudtestnir.tufin.io"]) {
+                    script {
+                        ./scripts/securecloud-workload-security-check.sh 'k8s/app-fixed.yaml' 'k8s/app-fixed.yaml.response.json'
+                    }
+                }
+            }
+        }
+    }
+}
