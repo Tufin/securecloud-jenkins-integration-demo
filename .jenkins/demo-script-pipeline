@@ -7,7 +7,7 @@ pipeline {
                     withEnv(["TUFIN_SECURECLOUD_URL=https://nir.securecloudtestnir.tufin.io"]) {
                         script {
                             sh("chmod +x ./scripts/securecloud-workload-security-check.sh")
-                            sh("./scripts/securecloud-workload-security-check.sh 'k8s/app-risky.yaml' 'k8s/app-risky.yaml.response.json' true")
+                            sh("./scripts/securecloud-workload-security-check.sh 'k8s/app-risky.yaml' 'k8s/app-risky.yaml.response.json' true1")
                         }
                     }
                 }
