@@ -1,5 +1,7 @@
 pipeline {
-    agent any
+    agent {
+        docker { image 'dwdraju/alpine-curl-jq' }
+    }
     stages {
         stage('SecureCloud workload security check') {
             steps {
