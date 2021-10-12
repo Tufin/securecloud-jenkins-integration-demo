@@ -2,7 +2,7 @@
 
 PrintUsage() {
 	echo ""
-	echo "Usage: cicd-workload-security.sh <inputFilename> <outputFilename> [failOnAnyRisk]"
+	echo "Usage: securecloud-workload-security-check.sh <inputFilename> <outputFilename> [failOnAnyRisk]"
 	echo ""
 	echo "Mandatory environment variables:"
 	echo "  TUFIN_SECURECLOUD_URL     - Tufin SecureCloud URL \"https://<your-account>.securecloud.tufin.io\""
@@ -13,7 +13,7 @@ PrintUsage() {
 	echo "  outputFilename - Workload security check results filename to create"
 	echo ""
 	echo "Optional arguments"
-	echo "  failOnAnyRisk  - Must be one of: 'true' or 'false'. Default is 'false'"
+	echo "  failOnAnyRisk  - Must be one of: 'true' or 'false', default is 'false'"
 }
 
 ValidateDependencies() {
@@ -28,8 +28,8 @@ ValidateDependencies() {
 	done
 }
 
-ValidateUsage() {    
-	if [[ -z "${TUFIN_SECURECLOUD_URL}" ]]; then
+ValidateUsage() {
+  if [[ -z "${TUFIN_SECURECLOUD_URL}" ]]; then
 		echo "ERROR: Please set TUFIN_SECURECLOUD_URL environment variable"
 		PrintUsage
 		exit 1
@@ -56,7 +56,7 @@ ValidateUsage() {
 		PrintUsage
 		exit 1
 	fi
-	
+
 	if [[ "${failOnAnyRisk}" != "true" && "${failOnAnyRisk}" != "false" ]]; then
 		echo "ERROR: failOnAnyRisk argument must be one of 'true' or 'false'. Value provided was '${failOnAnyRisk}'"
 		PrintUsage
@@ -82,10 +82,10 @@ AnalyzeResponse() {
 
 	podSecurityContextRisks=`jq '[.workloads[].risks?[] | select(.exempted == false)] | unique' "${outputFilename}"`
 	podSecurityContextRisksCount=`jq '[.workloads[].risks?[] | select(.exempted == false)] | unique | length' "${outputFilename}"`
-	
+
 	containerSecurityContextRisks=`jq '[.workloads[].containers?[].risks?[] | select(.exempted == false)] | unique' "${outputFilename}"`
 	containerSecurityContextRisksCount=`jq '[.workloads[].containers?[].risks?[] | select(.exempted == false)] | unique | length' "${outputFilename}"`
-	
+
 	msg=""
 	shortMsg=""
 	if [[ "${podSecurityContextRisksCount}" -gt "0" ]]; then
@@ -109,9 +109,10 @@ AnalyzeResponse() {
 			exit 1
 		fi
 	fi
-	
+
 }
 
+TUFIN_SECURECLOUD_URL=${TUFIN_SECURECLOUD_URL:-"https://nir.securecloudtestnir.tufin.io"}
 ValidateDependencies "curl" "jq"
 ValidateUsage $@
 InvokeSecureCloudApi
