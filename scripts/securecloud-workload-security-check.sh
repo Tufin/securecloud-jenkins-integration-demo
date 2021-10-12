@@ -17,6 +17,19 @@ PrintUsage() {
 }
 
 ValidateUsage() {
+
+	command -v "curl" &> /dev/null
+    	if [[ $? != 0 ]]; then
+        	echo "ERROR: 'curl' is required but wasn't found! please install it."
+        	exit 1
+    	fi
+
+	command -v "jq" &> /dev/null
+    	if [[ $? != 0 ]]; then
+	        echo "ERROR: 'jq' is required but wasn't found! please install it."
+	        exit 1
+    	fi
+    
 	if [[ -z "${TUFIN_SECURECLOUD_URL}" ]]; then
 		echo "ERROR: Please set TUFIN_SECURECLOUD_URL environment variable"
 		PrintUsage
