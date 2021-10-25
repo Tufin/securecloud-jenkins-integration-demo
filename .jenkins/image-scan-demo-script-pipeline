@@ -8,10 +8,10 @@ pipeline {
             steps {
                 withCredentials([string(credentialsId: 'jenkins-securecloud-api-access-key', variable: 'TUFIN_SECURECLOUD_API_KEY')]) {
                     script {
-                        docker pull alpine:3.13
+                        sh 'docker pull "alpine:3.13"'
                         scanScriptPath = "${env.WORKSPACE}" + "/" + "cicd_cia_" + "${env.BUILD_NUMBER}" + ".sh"
                         resultsPath = "${env.WORKSPACE}" + "/" + "scan_results_" + "${env.BUILD_NUMBER}" + ".json"
-                        bash ./scripts/securecloud-image-vulnerability-scan.sh "alpine:3.13" "${scanScriptPath}" "${resultsPath}"
+                        bash './scripts/securecloud-image-vulnerability-scan.sh "alpine:3.13" "${scanScriptPath}" "${resultsPath}"'
                     }
                 }
             }
