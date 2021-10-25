@@ -2,7 +2,7 @@ pipeline {
     agent any
     environment {
         TUFIN_CICD_FULL_SCAN_RESULTS="true"
-        TUFIN_SECURECLOUD_URL="https://smuvaj.securecloudtestoren.tufin.io/"
+        TUFIN_SECURECLOUD_URL="https://smuvaj.securecloudtestoren.tufin.io"
         TUFIN_SCRIPT_FILE="${env.WORKSPACE}" + "/" + "cicd_cia_" + "${env.BUILD_NUMBER}" + ".sh"
         TUFIN_RESULTS_FILE="${env.WORKSPACE}" + "/" + "scan_results_" + "${env.BUILD_NUMBER}" + ".json"
     }
