@@ -2,6 +2,7 @@ pipeline {
     agent any
     environment {
         TUFIN_CICD_FULL_SCAN_RESULTS="true"
+        TUFIN_SECURECLOUD_URL="https://smuvaj.securecloudtestoren.tufin.io/"
     }
     stages {
         stage('SecureCloud Image Vulnerability Scan') {
