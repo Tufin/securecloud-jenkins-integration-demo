@@ -11,7 +11,7 @@ pipeline {
                         sh 'docker pull "alpine:3.13"'
                         scanScriptPath = "${env.WORKSPACE}" + "/" + "cicd_cia_" + "${env.BUILD_NUMBER}" + ".sh"
                         resultsPath = "${env.WORKSPACE}" + "/" + "scan_results_" + "${env.BUILD_NUMBER}" + ".json"
-                        bash './scripts/securecloud-image-vulnerability-scan.sh "alpine:3.13" "${scanScriptPath}" "${resultsPath}"'
+                        sh 'bash ./scripts/securecloud-image-vulnerability-scan.sh "alpine:3.13" "${scanScriptPath}" "${resultsPath}"'
                     }
                 }
             }
