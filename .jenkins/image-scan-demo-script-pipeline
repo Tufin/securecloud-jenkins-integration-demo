@@ -14,7 +14,7 @@ pipeline {
                         resultsPath = "${env.WORKSPACE}" + "/" + "scan_results_" + "${env.BUILD_NUMBER}" + ".json"
                         echo "scanScriptPath: ${scanScriptPath}"
                         echo "resultsPath: ${resultsPath}"
-                        sh 'bash ./scripts/securecloud-image-vulnerability-scan.sh "alpine:3.13" "${scanScriptPath}" "${resultsPath}"'
+                        sh 'bash ./scripts/securecloud-image-vulnerability-scan.sh alpine:3.13 ${scanScriptPath} ${resultsPath}'
                     }
                 }
             }
