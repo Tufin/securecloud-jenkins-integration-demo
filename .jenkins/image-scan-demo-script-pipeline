@@ -3,6 +3,8 @@ pipeline {
     environment {
         TUFIN_CICD_FULL_SCAN_RESULTS="true"
         TUFIN_SECURECLOUD_URL="https://smuvaj.securecloudtestoren.tufin.io/"
+        TUFIN_SCRIPT_FILE="${env.WORKSPACE}" + "/" + "cicd_cia_" + "${env.BUILD_NUMBER}" + ".sh"
+        TUFIN_RESULTS_FILE="${env.WORKSPACE}" + "/" + "scan_results_" + "${env.BUILD_NUMBER}" + ".json"
     }
     stages {
         stage('SecureCloud Image Vulnerability Scan') {
@@ -10,15 +12,7 @@ pipeline {
                 withCredentials([usernameColonPassword(credentialsId: 'jenkins-securecloud-api-access-key', variable: 'TUFIN_SECURECLOUD_API_KEY')]) {
                     script {
                         sh 'docker pull "alpine:3.13"'
-                        scanScriptPath = "${env.WORKSPACE}" + "/" + "cicd_cia_" + "${env.BUILD_NUMBER}" + ".sh"
-                        resultsPath = "${env.WORKSPACE}" + "/" + "scan_results_" + "${env.BUILD_NUMBER}" + ".json"
-                        echo "scanScriptPath: ${scanScriptPath}"
-                        echo "resultsPath: ${resultsPath}"
-                        sh '''
-                            #!/bin/bash
-                            chmod +x ./scripts/securecloud-image-vulnerability-scan.sh
-                            ./scripts/securecloud-image-vulnerability-scan.sh alpine:3.13 ${scanScriptPath} ${resultsPath}
-                            '''
+                        sh 'bash  ./scripts/securecloud-image-vulnerability-scan.sh "alpine:3.13" ${env.TUFIN_SCRIPT_FILE}" "${env.TUFIN_RESULTS_FILE}"'
                     }
                 }
             }
