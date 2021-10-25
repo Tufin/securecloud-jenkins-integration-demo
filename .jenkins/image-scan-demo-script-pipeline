@@ -12,7 +12,7 @@ pipeline {
                 withCredentials([usernameColonPassword(credentialsId: 'jenkins-securecloud-api-access-key', variable: 'TUFIN_SECURECLOUD_API_KEY')]) {
                     script {
                         sh 'docker pull "alpine:3.13"'
-                        sh 'bash  ./scripts/securecloud-image-vulnerability-scan.sh "alpine:3.13" "${TUFIN_SCRIPT_FILE}" "${TUFIN_RESULTS_FILE}"'
+                        sh 'bash  ./scripts/securecloud-image-vulnerability-scan.sh "alpine:3.13" "${TUFIN_SCRIPT_FILE}" "${TUFIN_RESULTS_FILE}" "B" "false"'
                     }
                 }
             }
