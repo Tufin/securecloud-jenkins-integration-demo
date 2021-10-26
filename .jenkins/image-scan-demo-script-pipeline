@@ -8,7 +8,7 @@ pipeline {
     stages {
         stage('SecureCloud Image Vulnerability Scan') {
             steps {
-                withCredentials([string(credentialsId: "${TUFIN_JENKINS_CREDENTIALS_ID}, variable: 'TUFIN_SECURECLOUD_API_KEY')]) {
+                withCredentials([string(credentialsId: "${TUFIN_JENKINS_CREDENTIALS_ID}", variable: 'TUFIN_SECURECLOUD_API_KEY')]) {
                     script {
                         sh 'docker pull "${TUFIN_IMAGE_NAME}"'
                         sh 'bash  ./scripts/securecloud-image-vulnerability-scan.sh "${TUFIN_IMAGE_NAME}" "${TUFIN_SCRIPT_FILE}" "${TUFIN_RESULTS_FILE}" "B" "false"'
