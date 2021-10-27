@@ -1,9 +1,29 @@
 pipeline {
-    agent any
+
+     agent {
+        label 'linux-agent'
+    }
+    
+     environment {
+        TUFIN_SECURECLOUD_URL="https://generic-bank.secureclouddev.tufin.io"
+        TUFIN_SCRIPT_FILE="${env.WORKSPACE}" + "/" + "cicd_cia_" + "${env.BUILD_NUMBER}" + ".sh"
+        TUFIN_RESULTS_FILE="${env.WORKSPACE}" + "/" + "scan_results_" + "${env.BUILD_NUMBER}" + ".json"
+    }
+    
     stages {
         stage('SecureCloud workload security check') {
             steps {
                 tufinSecureCloudWorkloadSecurityCheck filename:'k8s/app.yaml'
+            }
+        }
+         stage('SecureCloud Image Vulnerability Scan') {
+            steps {
+                withCredentials([string(credentialsId: "${TUFIN_JENKINS_CREDENTIALS_ID}", variable: 'TUFIN_SECURECLOUD_API_KEY')]) {
+                    script {
+                        sh 'docker pull "${TUFIN_IMAGE_NAME}"'
+                        sh 'bash  ./scripts/securecloud-image-vulnerability-scan.sh "${TUFIN_IMAGE_NAME}" "${TUFIN_SCRIPT_FILE}" "${TUFIN_RESULTS_FILE}" "B" "false"'
+                    }
+                }
             }
         }
     }
