@@ -11,7 +11,7 @@ pipeline {
     }
     
     stages {
-        stage('SecureCloud workload security check') {
+        stage('Image Vulnerability Scan') {
             steps {
                 tufinSecureCloudImageVulnerabilityScan failBuildOnError: false, imageNameType: 'env_var', imageNameValue: 'TUFIN_IMAGE_NAME', passScanThreshold: 'B'
             }
