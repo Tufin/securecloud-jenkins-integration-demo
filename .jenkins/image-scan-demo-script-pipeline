@@ -3,7 +3,6 @@ pipeline {
         label 'linux-agent'
     }
     environment {
-        TUFIN_SECURECLOUD_URL="https://generic-bank.secureclouddev.tufin.io"
         TUFIN_SCRIPT_FILE="${env.WORKSPACE}" + "/" + "cicd_cia_" + "${env.BUILD_NUMBER}" + ".sh"
         TUFIN_RESULTS_FILE="${env.WORKSPACE}" + "/" + "scan_results_" + "${env.BUILD_NUMBER}" + ".json"
     }
