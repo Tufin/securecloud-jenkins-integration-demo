@@ -109,7 +109,7 @@ WaitForResults() {
 AnalyzeResults() {
   violationsCount=`jq -r '.result[]? | length' "${outputFileName}"`
   if [[ ${violationsCount} -gt 0 ]]; then
-    worseStatesCount = $(jq -r '.result.asset_violation_diffs[].state' | egrep -i "(NEW|ESCALATION|CHANGE)" | wc -l)
+    worseStatesCount = $(jq -r '.result.asset_violation_diffs[].state' "${outputFileName}" | egrep -i "(NEW|ESCALATION|CHANGE)" | wc -l)
     if [[ ${worseStatesCount} -gt 0 ]]; then
       printViolations
       exit 1
