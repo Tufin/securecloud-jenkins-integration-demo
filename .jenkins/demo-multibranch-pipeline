@@ -1,0 +1,60 @@
+podTemplate(containers: [containerTemplate(name: 'alpine-curl-jq', image: 'dwdraju/alpine-curl-jq', command: 'sleep', args: '99d')]) {
+    
+    node(POD_LABEL) {
+            
+        checkout scm
+            
+        stage('SecureCloud workload security check'){
+            container('alpine-curl-jq') {
+                withCredentials([string(credentialsId: 'jenkins-securecloud-api-access-key', variable: 'TUFIN_API_ACCESS_KEY')]) {
+                    withEnv([
+                                "TUFIN_DOMAIN=nir",
+                                "TUFIN_INPUT_FILENAME=/k8s/app.yaml"
+                            ]) {
+                        withEnv([
+                                        "inputFilename=${WORKSPACE}${TUFIN_INPUT_FILENAME}",
+                                        "outputFilename=${WORKSPACE}${TUFIN_INPUT_FILENAME}.response.json",
+                                        "url=https://${TUFIN_DOMAIN}.securecloudtestnir.tufin.io/api/v1/orca/model/cross-cluster/workload-risks"
+                                ]) {
+                                script {
+                                    code = sh(script: 'curl -X POST -s -w "%{response_code}" $url -H "Authorization: Bearer ${TUFIN_API_ACCESS_KEY}" -H "Content-Type: application/octet-stream" --data-binary @${inputFilename} -o ${outputFilename}', returnStdout: true).trim()
+                                    if (code != "200") {
+                                            error("SecureCloud HTTP response status code was ${code}")
+                                    }
+                                    response = sh(script: "cat ${outputFilename}", returnStdout: true).trim()
+                                    workloadsCount = sh(script: "jq '[.workloads[]] | length' ${outputFilename}", returnStdout: true).trim() as Integer
+                                    containersCount = sh(script: "jq '[.workloads[].containers?[]] | length' ${outputFilename}", returnStdout: true).trim() as Integer
+
+                                    podSecurityContextRisks = sh(script: "jq '[.workloads[].risks?[] | select(.exempted == false)] | unique' ${outputFilename}", returnStdout: true).trim()
+                                    podSecurityContextRisksCount = sh(script: "jq '[.workloads[].risks?[] | select(.exempted == false)] | unique | length' ${outputFilename}", returnStdout: true).trim() as Integer
+
+                                    containerSecurityContextRisks = sh(script: "jq '[.workloads[].containers?[].risks?[] | select(.exempted == false)] | unique' ${outputFilename}", returnStdout: true).trim()
+                                    containerSecurityContextRisksCount = sh(script: "jq '[.workloads[].containers?[].risks?[] | select(.exempted == false)] | unique | length' ${outputFilename}", returnStdout: true).trim() as Integer
+
+                                    msg = ""
+                                    shortMsg = ""
+                                    if (podSecurityContextRisksCount > 0) {
+                                            msg = msg + "${podSecurityContextRisksCount} Pod Security Context Risks: ${podSecurityContextRisks} \n"
+                                            shortMsg = shortMsg + "${podSecurityContextRisksCount} Pod Security Context Risks\n"
+                                    }
+                                    if (containerSecurityContextRisksCount > 0) { 
+                                            msg = msg + "${containerSecurityContextRisksCount} Container Security Context Risks: ${containerSecurityContextRisks} \n"
+                                            shortMsg = shortMsg + "${containerSecurityContextRisksCount} Container Security Context Risks\n"
+                                    }
+                                    if (msg != "") { 
+                                            msg = msg + "Across ${workloadsCount} workloads with ${containersCount} containers\nSecureCloud workload security check full response:\n" + response
+                                            shortMsg = shortMsg + "Across ${workloadsCount} workloads with ${containersCount} containers\n"
+                                            echo "SecureCloud workload security check found:\n${msg}"
+                                            error("SecureCloud workload security check found:\n${shortMsg}")
+                                    } else {
+                                            echo "SecureCloud workload security check full response:\n" + response
+                                            echo "SecureCloud workload security check for ${workloadsCount} workloads with ${containersCount} containers passed"
+                                    }
+                                }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
