@@ -61,9 +61,8 @@ ValidateUsage() {
 }
 
 StartSimulation() {
-  simulateUrl="${TUFIN_SECURECLOUD_URL}/api/orca/public/scripts/cicd-image-scan"
+  simulateUrl="${TUFIN_SECURECLOUD_URL}/api/iris/model/cross-account/simulation"
   headersFile="${WORKSPACE}/headers.json"
-  url="${TUFIN_SECURECLOUD_URL}/api/iris/model/cross-account/simulation"
 	code=$(curl -s -D "${headersFile}" -w "%{response_code}" --request POST -H "Authorization: Bearer ${TUFIN_SECURECLOUD_API_KEY}" --header 'Format: terraform02' --form "plan=@${planFileName} "${simulateUrl}"")
 
   if [[ "${code}" -ne "200" ]]; then
