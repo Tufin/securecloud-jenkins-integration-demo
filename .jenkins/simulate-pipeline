@@ -3,16 +3,15 @@ pipeline {
         label 'linux-agent'
     }
     environment {
-        TUFIN_SCRIPT_FILE="${env.WORKSPACE}" + "/" + "cicd_cia_" + "${env.BUILD_NUMBER}" + ".sh"
-        TUFIN_RESULTS_FILE="${env.WORKSPACE}" + "/" + "scan_results_" + "${env.BUILD_NUMBER}" + ".json"
+        TUFIN_RESULTS_FILE="${env.WORKSPACE}" + "/" + "simulation_results_" + "${env.BUILD_NUMBER}" + ".json"
+        TERRAFORM_PLAN_FILE="${env.WORKSPACE}" + "/" + "${env.TERRAFORM_PLAN_FILE}"
     }
     stages {
-        stage('SecureCloud Image Vulnerability Scan') {
+        stage('SecureCloud Simulation') {
             steps {
                 withCredentials([string(credentialsId: "${TUFIN_JENKINS_CREDENTIALS_ID}", variable: 'TUFIN_SECURECLOUD_API_KEY')]) {
                     script {
-                        sh 'docker pull "${TUFIN_IMAGE_NAME}"'
-                        sh 'bash  ./scripts/securecloud-image-vulnerability-scan.sh "${TUFIN_IMAGE_NAME}" "${TUFIN_SCRIPT_FILE}" "${TUFIN_RESULTS_FILE}" "B" "false"'
+                        sh 'bash ./scripts/securecloud-simulation.sh "${TERRAFORM_PLAN_FILE}" "${TUFIN_RESULTS_FILE}"'
                     }
                 }
             }
