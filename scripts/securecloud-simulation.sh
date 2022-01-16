@@ -77,7 +77,7 @@ StartSimulation() {
 }
 
 WaitForResults() {
-  simulationResultsUrl=`grep "^location" ${headersFile}  | cut -d":" -f2- | tr -d '\r\n'`
+  simulationResultsUrl=`grep "^location" ${headersFile}  | cut -d":" -f2- | tr -d '[:space:]'`
   if [[ -z "${simulationResultsUrl}" ]]; then
 		echo "ERROR: Failed to get location from headers file"
 		exit 1
@@ -88,8 +88,7 @@ WaitForResults() {
   while [[ "$i" -lt "$wait_count" ]]; do
     printf .
     sleep 2
-    simulationResult=$(curl --request GET -H "Authorization: Bearer ${TUFIN_SECURECLOUD_API_KEY}" "${simulationResultsUrl}")
-    echo ${simulationResult} > ${resultsFileName}
+    curl --request GET -H "Authorization: Bearer ${TUFIN_SECURECLOUD_API_KEY}" -o "${resultsFileName}" "${simulationResultsUrl}"
     status=$(jq -r '.status' "${resultsFileName}")
     if [[ "${status^^}" == "\"SUCCESS\"" ]]; then
       break
