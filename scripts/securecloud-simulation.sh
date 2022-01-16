@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -x
 
 PrintUsage() {
 	echo ""
@@ -86,7 +86,6 @@ WaitForResults() {
   wait_count="60"
   i="0"
   while [[ "$i" -lt "$wait_count" ]]; do
-    echo "Running as: " `whoami`
     printf .
     sleep 2
     curl -s --request GET -H "Authorization: Bearer ${TUFIN_SECURECLOUD_API_KEY}" "${simulationResultsUrl}" > ${resultsFileName}
