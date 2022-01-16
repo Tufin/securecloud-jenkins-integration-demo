@@ -123,6 +123,8 @@ AnalyzeResults() {
 }
 
 printViolations() {
+  toPrint=$(cat ${outputFileName} | jq)
+  echo "Found violations: ${toPrint}"
 }
 
 #---------------------------------------------------------------------------------------------------------------
