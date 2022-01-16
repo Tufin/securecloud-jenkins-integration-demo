@@ -11,7 +11,7 @@ pipeline {
             steps {
                 withCredentials([string(credentialsId: "${TUFIN_JENKINS_CREDENTIALS_ID}", variable: 'TUFIN_SECURECLOUD_API_KEY')]) {
                     script {
-                        sh 'bash -x ./scripts/securecloud-simulation.sh "${TERRAFORM_PLAN_FILE}" "${TUFIN_RESULTS_FILE}"'
+                        sh 'bash ./scripts/securecloud-simulation.sh "${TERRAFORM_PLAN_FILE}" "${TUFIN_RESULTS_FILE}"'
                     }
                 }
             }
