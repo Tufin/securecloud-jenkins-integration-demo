@@ -107,9 +107,9 @@ WaitForResults() {
 }
 
 AnalyzeResults() {
-  violationsCount=`jq -r '.result[]? | length' "${outputFileName}"`
+  violationsCount=`jq -r '.result[]? | length' "${resultsFileName}"`
   if [[ ${violationsCount} -gt 0 ]]; then
-    worseStatesCount = $(jq -r '.result.asset_violation_diffs[].state' "${outputFileName}" | egrep -i "(NEW|ESCALATION|CHANGE)" | wc -l)
+    worseStatesCount = $(jq -r '.result.asset_violation_diffs[].state' "${resultsFileName}" | egrep -i "(NEW|ESCALATION|CHANGE)" | wc -l)
     if [[ ${worseStatesCount} -gt 0 ]]; then
       printViolations
       exit 1
@@ -122,7 +122,7 @@ AnalyzeResults() {
 }
 
 printViolations() {
-  toPrint=$(cat ${outputFileName} | jq)
+  toPrint=$(cat ${resultsFileName} | jq)
   echo "Found violations: ${toPrint}"
 }
 
