@@ -1,4 +1,4 @@
-#!/bin/bash -x
+#!/bin/bash
 
 PrintUsage() {
 	echo ""
@@ -88,7 +88,8 @@ WaitForResults() {
   while [[ "$i" -lt "$wait_count" ]]; do
     printf .
     sleep 2
-    curl -s --request GET -H "Authorization: Bearer ${TUFIN_SECURECLOUD_API_KEY}" "${simulationResultsUrl}" > ${resultsFileName}
+    simulationResult=$(curl --request GET -H "Authorization: Bearer ${TUFIN_SECURECLOUD_API_KEY}" "${simulationResultsUrl}")
+    echo ${simulationResult} > ${resultsFileName}
     status=$(jq -r '.status' "${resultsFileName}")
     if [[ "${status^^}" == "\"SUCCESS\"" ]]; then
       break
