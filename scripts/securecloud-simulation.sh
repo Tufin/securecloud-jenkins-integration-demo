@@ -89,7 +89,7 @@ WaitForResults() {
     echo "Running as: " `whoami`
     printf .
     sleep 2
-    filename_effective=$(curl -w "%{filename_effective}" -s --request GET -H "Authorization: Bearer ${TUFIN_SECURECLOUD_API_KEY}" -o "${resultsFileName}" "${simulationResultsUrl}")
+    curl -s --request GET -H "Authorization: Bearer ${TUFIN_SECURECLOUD_API_KEY}" "${simulationResultsUrl}" > ${resultsFileName}
     echo "filename_effective: ${filename_effective}"
     status=$(jq -r '.status' "${resultsFileName}")
     if [[ "${status^^}" == "\"SUCCESS\"" ]]; then
