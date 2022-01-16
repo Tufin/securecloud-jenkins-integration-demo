@@ -90,7 +90,6 @@ WaitForResults() {
     printf .
     sleep 2
     curl -s --request GET -H "Authorization: Bearer ${TUFIN_SECURECLOUD_API_KEY}" "${simulationResultsUrl}" > ${resultsFileName}
-    echo "filename_effective: ${filename_effective}"
     status=$(jq -r '.status' "${resultsFileName}")
     if [[ "${status^^}" == "\"SUCCESS\"" ]]; then
       break
