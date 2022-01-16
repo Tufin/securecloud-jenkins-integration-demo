@@ -63,7 +63,7 @@ ValidateUsage() {
 StartSimulation() {
   simulateUrl="${TUFIN_SECURECLOUD_URL}/api/iris/model/cross-account/simulation"
   headersFile="${WORKSPACE}/headers.json"
-	code=$(curl -s -D "${headersFile}" -w "%{response_code}" --request POST -H "Authorization: Bearer ${TUFIN_SECURECLOUD_API_KEY}" --header 'Format: terraform02' --form "plan=@${planFileName} "${simulateUrl}"")
+	code=$(curl -s -D "${headersFile}" -w "%{response_code}" --request POST -H "Authorization: Bearer ${TUFIN_SECURECLOUD_API_KEY}" --header 'Format: terraform02' --form "plan=@${planFileName}" "${simulateUrl}")
 
   if [[ "${code}" -ne "200" ]]; then
 	  echo "ERROR: SecureCloud HTTP response status code was ${code}"
