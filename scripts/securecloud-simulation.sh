@@ -90,9 +90,9 @@ WaitForResults() {
     sleep 2
     curl --request GET -H "Authorization: Bearer ${TUFIN_SECURECLOUD_API_KEY}" -o "${resultsFileName}" "${simulationResultsUrl}"
     status=$(jq -r '.status' "${resultsFileName}")
-    if [[ "${status^^}" == "\"SUCCESS\"" ]]; then
+    if [[ "${status^^}" == "SUCCESS" ]]; then
       break
-    elif [[ "${status^^}" != "\"IN_PROGRESS\"" ]]; then
+    elif [[ "${status^^}" != "IN_PROGRESS" ]]; then
       echo "Unknown status found: ${status}"
       exit 1
     fi
