@@ -10,9 +10,9 @@ pipeline {
         stage('SecureCloud Simulation') {
             steps {
                 withCredentials([string(credentialsId: "${TUFIN_JENKINS_CREDENTIALS_ID}", variable: 'TUFIN_SECURECLOUD_API_KEY')]) {
-                    withFileParameter('uploaded_plan2') {
+                    withFileParameter('uploaded_plan') {
                         script {
-                            sh 'cat $uploaded_plan2 > uploaded_plan2.json'
+                            sh 'cat $uploaded_plan > uploaded_plan.json'
                             sh 'bash ./scripts/securecloud-simulation.sh "${TERRAFORM_PLAN_FILE}" "${TUFIN_RESULTS_FILE}"'
                         }
                     }
