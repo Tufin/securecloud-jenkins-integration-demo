@@ -122,7 +122,7 @@ AnalyzeResults() {
 }
 
 printViolations() {
-  echo "Found new/escalated or changed violations, check archived file for full results"
+  echo "SecureCloud simulation completed with new, escalated or changed violations. Check build artifacts for full results."
 }
 
 #---------------------------------------------------------------------------------------------------------------
