@@ -122,8 +122,7 @@ AnalyzeResults() {
 }
 
 printViolations() {
-  toPrint=$(cat ${resultsFileName} | jq)
-  echo "Found violations: ${toPrint}"
+  echo "Found new/escalated or changed violations, check archived file for full results"
 }
 
 #---------------------------------------------------------------------------------------------------------------
