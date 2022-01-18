@@ -22,7 +22,10 @@ pipeline {
     }
     post {
         always {
-            archiveArtifacts artifacts: "simulation_results_" + "${env.BUILD_NUMBER}" + ".json"
+            script {
+                sh 'cat ${TUFIN_RESULTS_FILE} | jq > securecloud_simulation_results.json'
+            }
+            archiveArtifacts artifacts: "securecloud_simulation_results.json"
         }
     }
 }
