@@ -1,0 +1,788 @@
+{
+  "format_version": "0.2",
+  "terraform_version": "1.0.9",
+  "planned_values": {
+    "outputs": {
+      "account_ids": {
+        "sensitive": false,
+        "value": [
+          {
+            "key": "azurerm",
+            "value": "267f3f8d-a9e3-4382-93a7-266cebfd96da"
+          }
+        ]
+      }
+    },
+    "root_module": {
+      "resources": [
+        {
+          "address": "azurerm_application_security_group.asg",
+          "mode": "managed",
+          "type": "azurerm_application_security_group",
+          "name": "asg",
+          "provider_name": "registry.terraform.io/hashicorp/azurerm",
+          "schema_version": 0,
+          "values": {
+            "id": "/subscriptions/267f3f8d-a9e3-4382-93a7-266cebfd96da/resourceGroups/IrisDemo-RG/providers/Microsoft.Network/applicationSecurityGroups/ASG_Infra",
+            "location": "westus",
+            "name": "ASG_Infra",
+            "resource_group_name": "IrisDemo-RG",
+            "tags": {},
+            "timeouts": {
+              "create": null,
+              "delete": null,
+              "read": null,
+              "update": null
+            }
+          },
+          "sensitive_values": {
+            "tags": {},
+            "timeouts": {}
+          }
+        },
+        {
+          "address": "azurerm_network_security_group.nsg-sales-dev",
+          "mode": "managed",
+          "type": "azurerm_network_security_group",
+          "name": "nsg-sales-dev",
+          "provider_name": "registry.terraform.io/hashicorp/azurerm",
+          "schema_version": 0,
+          "values": {
+            "id": "/subscriptions/267f3f8d-a9e3-4382-93a7-266cebfd96da/resourceGroups/IrisDemo-RG/providers/Microsoft.Network/networkSecurityGroups/NSG_Sales_Dev",
+            "location": "westus",
+            "name": "NSG_Sales_Dev",
+            "resource_group_name": "IrisDemo-RG",
+            "security_rule": [
+              {
+                "access": "Allow",
+                "description": "",
+                "destination_address_prefix": "",
+                "destination_address_prefixes": [],
+                "destination_application_security_group_ids": [
+                  "/subscriptions/267f3f8d-a9e3-4382-93a7-266cebfd96da/resourceGroups/IrisDemo-RG/providers/Microsoft.Network/applicationSecurityGroups/ASG_Infra"
+                ],
+                "destination_port_range": "22",
+                "destination_port_ranges": [],
+                "direction": "Inbound",
+                "name": "AllowSSHInBound",
+                "priority": 100,
+                "protocol": "Tcp",
+                "source_address_prefix": "10.100.14.0/24",
+                "source_address_prefixes": [],
+                "source_application_security_group_ids": [],
+                "source_port_range": "*",
+                "source_port_ranges": []
+              },
+              {
+                "access": "Allow",
+                "description": "",
+                "destination_address_prefix": "*",
+                "destination_address_prefixes": [],
+                "destination_application_security_group_ids": [],
+                "destination_port_range": "*",
+                "destination_port_ranges": [],
+                "direction": "Inbound",
+                "name": "permissive",
+                "priority": 102,
+                "protocol": "*",
+                "source_address_prefix": "*",
+                "source_address_prefixes": [],
+                "source_application_security_group_ids": [],
+                "source_port_range": "*",
+                "source_port_ranges": []
+              },
+              {
+                "access": "Deny",
+                "description": "",
+                "destination_address_prefix": "*",
+                "destination_address_prefixes": [],
+                "destination_application_security_group_ids": [],
+                "destination_port_range": "*",
+                "destination_port_ranges": [],
+                "direction": "Inbound",
+                "name": "Port_8080",
+                "priority": 101,
+                "protocol": "*",
+                "source_address_prefix": "*",
+                "source_address_prefixes": [],
+                "source_application_security_group_ids": [],
+                "source_port_range": "*",
+                "source_port_ranges": []
+              }
+            ],
+            "tags": {
+              "App": "Sales",
+              "Environment": "Dev"
+            },
+            "timeouts": {
+              "create": null,
+              "delete": null,
+              "read": null,
+              "update": null
+            }
+          },
+          "sensitive_values": {
+            "security_rule": [
+              {
+                "destination_address_prefixes": [],
+                "destination_application_security_group_ids": [
+                  false
+                ],
+                "destination_port_ranges": [],
+                "source_address_prefixes": [],
+                "source_application_security_group_ids": [],
+                "source_port_ranges": []
+              },
+              {
+                "destination_address_prefixes": [],
+                "destination_application_security_group_ids": [],
+                "destination_port_ranges": [],
+                "source_address_prefixes": [],
+                "source_application_security_group_ids": [],
+                "source_port_ranges": []
+              },
+              {
+                "destination_address_prefixes": [],
+                "destination_application_security_group_ids": [],
+                "destination_port_ranges": [],
+                "source_address_prefixes": [],
+                "source_application_security_group_ids": [],
+                "source_port_ranges": []
+              }
+            ],
+            "tags": {},
+            "timeouts": {}
+          }
+        },
+        {
+          "address": "azurerm_resource_group.rg",
+          "mode": "managed",
+          "type": "azurerm_resource_group",
+          "name": "rg",
+          "provider_name": "registry.terraform.io/hashicorp/azurerm",
+          "schema_version": 0,
+          "values": {
+            "id": "/subscriptions/267f3f8d-a9e3-4382-93a7-266cebfd96da/resourceGroups/IrisDemo-RG",
+            "location": "westus",
+            "name": "IrisDemo-RG",
+            "tags": {},
+            "timeouts": {
+              "create": null,
+              "delete": null,
+              "read": null,
+              "update": null
+            }
+          },
+          "sensitive_values": {
+            "tags": {},
+            "timeouts": {}
+          }
+        }
+      ]
+    }
+  },
+  "resource_changes": [
+    {
+      "address": "azurerm_application_security_group.asg",
+      "mode": "managed",
+      "type": "azurerm_application_security_group",
+      "name": "asg",
+      "provider_name": "registry.terraform.io/hashicorp/azurerm",
+      "change": {
+        "actions": [
+          "no-op"
+        ],
+        "before": {
+          "id": "/subscriptions/267f3f8d-a9e3-4382-93a7-266cebfd96da/resourceGroups/IrisDemo-RG/providers/Microsoft.Network/applicationSecurityGroups/ASG_Infra",
+          "location": "westus",
+          "name": "ASG_Infra",
+          "resource_group_name": "IrisDemo-RG",
+          "tags": {},
+          "timeouts": {
+            "create": null,
+            "delete": null,
+            "read": null,
+            "update": null
+          }
+        },
+        "after": {
+          "id": "/subscriptions/267f3f8d-a9e3-4382-93a7-266cebfd96da/resourceGroups/IrisDemo-RG/providers/Microsoft.Network/applicationSecurityGroups/ASG_Infra",
+          "location": "westus",
+          "name": "ASG_Infra",
+          "resource_group_name": "IrisDemo-RG",
+          "tags": {},
+          "timeouts": {
+            "create": null,
+            "delete": null,
+            "read": null,
+            "update": null
+          }
+        },
+        "after_unknown": {},
+        "before_sensitive": {
+          "tags": {},
+          "timeouts": {}
+        },
+        "after_sensitive": {
+          "tags": {},
+          "timeouts": {}
+        }
+      }
+    },
+    {
+      "address": "azurerm_network_security_group.nsg-sales-dev",
+      "mode": "managed",
+      "type": "azurerm_network_security_group",
+      "name": "nsg-sales-dev",
+      "provider_name": "registry.terraform.io/hashicorp/azurerm",
+      "change": {
+        "actions": [
+          "update"
+        ],
+        "before": {
+          "id": "/subscriptions/267f3f8d-a9e3-4382-93a7-266cebfd96da/resourceGroups/IrisDemo-RG/providers/Microsoft.Network/networkSecurityGroups/NSG_Sales_Dev",
+          "location": "westus",
+          "name": "NSG_Sales_Dev",
+          "resource_group_name": "IrisDemo-RG",
+          "security_rule": [
+            {
+              "access": "Allow",
+              "description": "",
+              "destination_address_prefix": "",
+              "destination_address_prefixes": [],
+              "destination_application_security_group_ids": [
+                "/subscriptions/267f3f8d-a9e3-4382-93a7-266cebfd96da/resourceGroups/IrisDemo-RG/providers/Microsoft.Network/applicationSecurityGroups/ASG_Infra"
+              ],
+              "destination_port_range": "22",
+              "destination_port_ranges": [],
+              "direction": "Inbound",
+              "name": "AllowSSHInBound",
+              "priority": 100,
+              "protocol": "Tcp",
+              "source_address_prefix": "10.100.14.0/24",
+              "source_address_prefixes": [],
+              "source_application_security_group_ids": [],
+              "source_port_range": "*",
+              "source_port_ranges": []
+            },
+            {
+              "access": "Deny",
+              "description": "",
+              "destination_address_prefix": "*",
+              "destination_address_prefixes": [],
+              "destination_application_security_group_ids": [],
+              "destination_port_range": "*",
+              "destination_port_ranges": [],
+              "direction": "Inbound",
+              "name": "Port_8080",
+              "priority": 101,
+              "protocol": "*",
+              "source_address_prefix": "*",
+              "source_address_prefixes": [],
+              "source_application_security_group_ids": [],
+              "source_port_range": "*",
+              "source_port_ranges": []
+            }
+          ],
+          "tags": {
+            "App": "Sales",
+            "Environment": "Dev"
+          },
+          "timeouts": {
+            "create": null,
+            "delete": null,
+            "read": null,
+            "update": null
+          }
+        },
+        "after": {
+          "id": "/subscriptions/267f3f8d-a9e3-4382-93a7-266cebfd96da/resourceGroups/IrisDemo-RG/providers/Microsoft.Network/networkSecurityGroups/NSG_Sales_Dev",
+          "location": "westus",
+          "name": "NSG_Sales_Dev",
+          "resource_group_name": "IrisDemo-RG",
+          "security_rule": [
+            {
+              "access": "Allow",
+              "description": "",
+              "destination_address_prefix": "",
+              "destination_address_prefixes": [],
+              "destination_application_security_group_ids": [
+                "/subscriptions/267f3f8d-a9e3-4382-93a7-266cebfd96da/resourceGroups/IrisDemo-RG/providers/Microsoft.Network/applicationSecurityGroups/ASG_Infra"
+              ],
+              "destination_port_range": "22",
+              "destination_port_ranges": [],
+              "direction": "Inbound",
+              "name": "AllowSSHInBound",
+              "priority": 100,
+              "protocol": "Tcp",
+              "source_address_prefix": "10.100.14.0/24",
+              "source_address_prefixes": [],
+              "source_application_security_group_ids": [],
+              "source_port_range": "*",
+              "source_port_ranges": []
+            },
+            {
+              "access": "Allow",
+              "description": "",
+              "destination_address_prefix": "*",
+              "destination_address_prefixes": [],
+              "destination_application_security_group_ids": [],
+              "destination_port_range": "*",
+              "destination_port_ranges": [],
+              "direction": "Inbound",
+              "name": "permissive",
+              "priority": 102,
+              "protocol": "*",
+              "source_address_prefix": "*",
+              "source_address_prefixes": [],
+              "source_application_security_group_ids": [],
+              "source_port_range": "*",
+              "source_port_ranges": []
+            },
+            {
+              "access": "Deny",
+              "description": "",
+              "destination_address_prefix": "*",
+              "destination_address_prefixes": [],
+              "destination_application_security_group_ids": [],
+              "destination_port_range": "*",
+              "destination_port_ranges": [],
+              "direction": "Inbound",
+              "name": "Port_8080",
+              "priority": 101,
+              "protocol": "*",
+              "source_address_prefix": "*",
+              "source_address_prefixes": [],
+              "source_application_security_group_ids": [],
+              "source_port_range": "*",
+              "source_port_ranges": []
+            }
+          ],
+          "tags": {
+            "App": "Sales",
+            "Environment": "Dev"
+          },
+          "timeouts": {
+            "create": null,
+            "delete": null,
+            "read": null,
+            "update": null
+          }
+        },
+        "after_unknown": {},
+        "before_sensitive": {
+          "security_rule": [
+            {
+              "destination_address_prefixes": [],
+              "destination_application_security_group_ids": [
+                false
+              ],
+              "destination_port_ranges": [],
+              "source_address_prefixes": [],
+              "source_application_security_group_ids": [],
+              "source_port_ranges": []
+            },
+            {
+              "destination_address_prefixes": [],
+              "destination_application_security_group_ids": [],
+              "destination_port_ranges": [],
+              "source_address_prefixes": [],
+              "source_application_security_group_ids": [],
+              "source_port_ranges": []
+            }
+          ],
+          "tags": {},
+          "timeouts": {}
+        },
+        "after_sensitive": {
+          "security_rule": [
+            {
+              "destination_address_prefixes": [],
+              "destination_application_security_group_ids": [
+                false
+              ],
+              "destination_port_ranges": [],
+              "source_address_prefixes": [],
+              "source_application_security_group_ids": [],
+              "source_port_ranges": []
+            },
+            {
+              "destination_address_prefixes": [],
+              "destination_application_security_group_ids": [],
+              "destination_port_ranges": [],
+              "source_address_prefixes": [],
+              "source_application_security_group_ids": [],
+              "source_port_ranges": []
+            },
+            {
+              "destination_address_prefixes": [],
+              "destination_application_security_group_ids": [],
+              "destination_port_ranges": [],
+              "source_address_prefixes": [],
+              "source_application_security_group_ids": [],
+              "source_port_ranges": []
+            }
+          ],
+          "tags": {},
+          "timeouts": {}
+        }
+      }
+    },
+    {
+      "address": "azurerm_resource_group.rg",
+      "mode": "managed",
+      "type": "azurerm_resource_group",
+      "name": "rg",
+      "provider_name": "registry.terraform.io/hashicorp/azurerm",
+      "change": {
+        "actions": [
+          "no-op"
+        ],
+        "before": {
+          "id": "/subscriptions/267f3f8d-a9e3-4382-93a7-266cebfd96da/resourceGroups/IrisDemo-RG",
+          "location": "westus",
+          "name": "IrisDemo-RG",
+          "tags": {},
+          "timeouts": {
+            "create": null,
+            "delete": null,
+            "read": null,
+            "update": null
+          }
+        },
+        "after": {
+          "id": "/subscriptions/267f3f8d-a9e3-4382-93a7-266cebfd96da/resourceGroups/IrisDemo-RG",
+          "location": "westus",
+          "name": "IrisDemo-RG",
+          "tags": {},
+          "timeouts": {
+            "create": null,
+            "delete": null,
+            "read": null,
+            "update": null
+          }
+        },
+        "after_unknown": {},
+        "before_sensitive": {
+          "tags": {},
+          "timeouts": {}
+        },
+        "after_sensitive": {
+          "tags": {},
+          "timeouts": {}
+        }
+      }
+    }
+  ],
+  "output_changes": {
+    "account_ids": {
+      "actions": [
+        "update"
+      ],
+      "before": [
+        {
+          "key": "azurerm",
+          "value": null
+        }
+      ],
+      "after": [
+        {
+          "key": "azurerm",
+          "value": "267f3f8d-a9e3-4382-93a7-266cebfd96da"
+        }
+      ],
+      "after_unknown": false,
+      "before_sensitive": false,
+      "after_sensitive": false
+    }
+  },
+  "prior_state": {
+    "format_version": "0.2",
+    "terraform_version": "1.0.9",
+    "values": {
+      "outputs": {
+        "account_ids": {
+          "sensitive": false,
+          "value": [
+            {
+              "key": "azurerm",
+              "value": "267f3f8d-a9e3-4382-93a7-266cebfd96da"
+            }
+          ]
+        }
+      },
+      "root_module": {
+        "resources": [
+          {
+            "address": "azurerm_application_security_group.asg",
+            "mode": "managed",
+            "type": "azurerm_application_security_group",
+            "name": "asg",
+            "provider_name": "registry.terraform.io/hashicorp/azurerm",
+            "schema_version": 0,
+            "values": {
+              "id": "/subscriptions/267f3f8d-a9e3-4382-93a7-266cebfd96da/resourceGroups/IrisDemo-RG/providers/Microsoft.Network/applicationSecurityGroups/ASG_Infra",
+              "location": "westus",
+              "name": "ASG_Infra",
+              "resource_group_name": "IrisDemo-RG",
+              "tags": {},
+              "timeouts": {
+                "create": null,
+                "delete": null,
+                "read": null,
+                "update": null
+              }
+            },
+            "sensitive_values": {
+              "tags": {},
+              "timeouts": {}
+            },
+            "depends_on": [
+              "azurerm_resource_group.rg"
+            ]
+          },
+          {
+            "address": "azurerm_network_security_group.nsg-sales-dev",
+            "mode": "managed",
+            "type": "azurerm_network_security_group",
+            "name": "nsg-sales-dev",
+            "provider_name": "registry.terraform.io/hashicorp/azurerm",
+            "schema_version": 0,
+            "values": {
+              "id": "/subscriptions/267f3f8d-a9e3-4382-93a7-266cebfd96da/resourceGroups/IrisDemo-RG/providers/Microsoft.Network/networkSecurityGroups/NSG_Sales_Dev",
+              "location": "westus",
+              "name": "NSG_Sales_Dev",
+              "resource_group_name": "IrisDemo-RG",
+              "security_rule": [
+                {
+                  "access": "Allow",
+                  "description": "",
+                  "destination_address_prefix": "",
+                  "destination_address_prefixes": [],
+                  "destination_application_security_group_ids": [
+                    "/subscriptions/267f3f8d-a9e3-4382-93a7-266cebfd96da/resourceGroups/IrisDemo-RG/providers/Microsoft.Network/applicationSecurityGroups/ASG_Infra"
+                  ],
+                  "destination_port_range": "22",
+                  "destination_port_ranges": [],
+                  "direction": "Inbound",
+                  "name": "AllowSSHInBound",
+                  "priority": 100,
+                  "protocol": "Tcp",
+                  "source_address_prefix": "10.100.14.0/24",
+                  "source_address_prefixes": [],
+                  "source_application_security_group_ids": [],
+                  "source_port_range": "*",
+                  "source_port_ranges": []
+                },
+                {
+                  "access": "Deny",
+                  "description": "",
+                  "destination_address_prefix": "*",
+                  "destination_address_prefixes": [],
+                  "destination_application_security_group_ids": [],
+                  "destination_port_range": "*",
+                  "destination_port_ranges": [],
+                  "direction": "Inbound",
+                  "name": "Port_8080",
+                  "priority": 101,
+                  "protocol": "*",
+                  "source_address_prefix": "*",
+                  "source_address_prefixes": [],
+                  "source_application_security_group_ids": [],
+                  "source_port_range": "*",
+                  "source_port_ranges": []
+                }
+              ],
+              "tags": {
+                "App": "Sales",
+                "Environment": "Dev"
+              },
+              "timeouts": {
+                "create": null,
+                "delete": null,
+                "read": null,
+                "update": null
+              }
+            },
+            "sensitive_values": {
+              "security_rule": [
+                {
+                  "destination_address_prefixes": [],
+                  "destination_application_security_group_ids": [
+                    false
+                  ],
+                  "destination_port_ranges": [],
+                  "source_address_prefixes": [],
+                  "source_application_security_group_ids": [],
+                  "source_port_ranges": []
+                },
+                {
+                  "destination_address_prefixes": [],
+                  "destination_application_security_group_ids": [],
+                  "destination_port_ranges": [],
+                  "source_address_prefixes": [],
+                  "source_application_security_group_ids": [],
+                  "source_port_ranges": []
+                }
+              ],
+              "tags": {},
+              "timeouts": {}
+            },
+            "depends_on": [
+              "azurerm_application_security_group.asg",
+              "azurerm_resource_group.rg"
+            ]
+          },
+          {
+            "address": "azurerm_resource_group.rg",
+            "mode": "managed",
+            "type": "azurerm_resource_group",
+            "name": "rg",
+            "provider_name": "registry.terraform.io/hashicorp/azurerm",
+            "schema_version": 0,
+            "values": {
+              "id": "/subscriptions/267f3f8d-a9e3-4382-93a7-266cebfd96da/resourceGroups/IrisDemo-RG",
+              "location": "westus",
+              "name": "IrisDemo-RG",
+              "tags": {},
+              "timeouts": {
+                "create": null,
+                "delete": null,
+                "read": null,
+                "update": null
+              }
+            },
+            "sensitive_values": {
+              "tags": {},
+              "timeouts": {}
+            }
+          },
+          {
+            "address": "data.azurerm_client_config.current",
+            "mode": "data",
+            "type": "azurerm_client_config",
+            "name": "current",
+            "provider_name": "registry.terraform.io/hashicorp/azurerm",
+            "schema_version": 0,
+            "values": {
+              "client_id": "04b07795-8ddb-461a-bbee-02f9e1bf7b46",
+              "id": "2022-01-12 16:35:22.2827693 +0000 UTC",
+              "object_id": "441b22b0-9619-4764-a31e-b876a187c21e",
+              "subscription_id": "267f3f8d-a9e3-4382-93a7-266cebfd96da",
+              "tenant_id": "0928ecb3-b38b-4fd4-8e44-41918e9e1b92",
+              "timeouts": null
+            },
+            "sensitive_values": {}
+          }
+        ]
+      }
+    }
+  },
+  "configuration": {
+    "provider_config": {
+      "azurerm": {
+        "name": "azurerm",
+        "version_constraint": "~\u003e 2.65",
+        "expressions": {
+          "features": [
+            {}
+          ]
+        }
+      }
+    },
+    "root_module": {
+      "outputs": {
+        "account_ids": {
+          "expression": {
+            "references": [
+              "data.azurerm_client_config.current.subscription_id",
+              "data.azurerm_client_config.current"
+            ]
+          }
+        }
+      },
+      "resources": [
+        {
+          "address": "azurerm_application_security_group.asg",
+          "mode": "managed",
+          "type": "azurerm_application_security_group",
+          "name": "asg",
+          "provider_config_key": "azurerm",
+          "expressions": {
+            "location": {
+              "references": [
+                "azurerm_resource_group.rg.location",
+                "azurerm_resource_group.rg"
+              ]
+            },
+            "name": {
+              "constant_value": "ASG_Infra"
+            },
+            "resource_group_name": {
+              "references": [
+                "azurerm_resource_group.rg.name",
+                "azurerm_resource_group.rg"
+              ]
+            }
+          },
+          "schema_version": 0
+        },
+        {
+          "address": "azurerm_network_security_group.nsg-sales-dev",
+          "mode": "managed",
+          "type": "azurerm_network_security_group",
+          "name": "nsg-sales-dev",
+          "provider_config_key": "azurerm",
+          "expressions": {
+            "location": {
+              "references": [
+                "azurerm_resource_group.rg.location",
+                "azurerm_resource_group.rg"
+              ]
+            },
+            "name": {
+              "constant_value": "NSG_Sales_Dev"
+            },
+            "resource_group_name": {
+              "references": [
+                "azurerm_resource_group.rg.name",
+                "azurerm_resource_group.rg"
+              ]
+            },
+            "tags": {
+              "constant_value": {
+                "App": "Sales",
+                "Environment": "Dev"
+              }
+            }
+          },
+          "schema_version": 0
+        },
+        {
+          "address": "azurerm_resource_group.rg",
+          "mode": "managed",
+          "type": "azurerm_resource_group",
+          "name": "rg",
+          "provider_config_key": "azurerm",
+          "expressions": {
+            "location": {
+              "constant_value": "westus"
+            },
+            "name": {
+              "constant_value": "IrisDemo-RG"
+            }
+          },
+          "schema_version": 0
+        },
+        {
+          "address": "data.azurerm_client_config.current",
+          "mode": "data",
+          "type": "azurerm_client_config",
+          "name": "current",
+          "provider_config_key": "azurerm",
+          "schema_version": 0
+        }
+      ]
+    }
+  }
+}
