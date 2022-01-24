@@ -71,7 +71,7 @@ StartSimulation() {
 	fi
 
 	if [[ ! -f "${headersFile}" ]]; then
-		echo "ERROR: Terraform plan file does not exist: ${planFileName}"
+		echo "ERROR: headers file does not exist: ${headersFile}"
 		exit 1
 	fi
 }
