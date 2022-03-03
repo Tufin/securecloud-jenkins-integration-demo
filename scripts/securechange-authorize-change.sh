@@ -154,7 +154,6 @@ PrepareAuthorizationBody() {
   AddServices
   authRequestBody+=,'"comment": "Authorization request for ticket #'"${ticketID}"'"'
   authRequestBody+='}]}'
-  echo "${authRequestBody}"
   echo "${authRequestBody}" > "${scAuthRequestBody}"
 }
 
@@ -203,7 +202,7 @@ AddServices() {
       fi
     done
   else
-    authRequestBody+='{"type":"ANY"}'
+    authRequestBody+='{"type":"ANY_NETWORK"}'
   fi
   authRequestBody+=']'
 }
@@ -211,10 +210,10 @@ AddServices() {
 PostAuthRequest() {
   postAuthUrl="${TUFIN_SECURECLOUD_URL}/api/iris/model/cross-account/integration/verify-changes"
   echo "Calling api: ${postAuthUrl}"
-  code=$(curl -vvv -X POST -s -k -w "%{response_code}" -H "Authorization: Bearer ${TUFIN_SECURECLOUD_API_KEY}" --header 'Format: terraform02' -F "plan=@${terraformPlanFile}" -F "access-request=@${scAuthRequestBody}" -o "${scAuthResponseFile}" "${postAuthUrl}")
+  code=$(curl -X POST -s -k -w "%{response_code}" -H "Authorization: Bearer ${TUFIN_SECURECLOUD_API_KEY}" --header 'Format: terraform02' -F "plan=@${terraformPlanFile}" -F "access-request=@${scAuthRequestBody}" -o "${scAuthResponseFile}" "${postAuthUrl}")
 
   if [[ "${code}" -ne "200" ]]; then
-    echo "ERROR:SecureCloud HTTP response status code was ${code}, URL: ${postAuthUrl}"
+    echo "ERROR: SecureCloud HTTP response status code was ${code}, URL: ${postAuthUrl}"
     exit 1
   fi
 }
