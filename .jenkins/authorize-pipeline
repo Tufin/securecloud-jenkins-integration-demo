@@ -29,7 +29,7 @@ pipeline {
     }
     post {
         always {
-            archiveArtifacts '"${SCW_RESPONSE_FILE}"'
+            archiveArtifacts artifacts: '"${SCW_RESPONSE_FILE}"'
         }
     }
 }
