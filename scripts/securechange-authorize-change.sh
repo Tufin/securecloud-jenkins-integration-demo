@@ -15,6 +15,7 @@ PrintUsage() {
   echo "  terraformPlanFile  - Path to terraform plan file"
   echo "  scwResponseFile    - Path to temp file that will hold the response from SecureChangeWorkflow"
   echo "  scTargetsFile      - Path to temp file that will hold the possible target IDs from SecureCloud"
+  echo "  scAuthRequestBody  - Path to temp file that will hold the request body sent to SecureCloud"
   echo "  scAuthResponseFile - Path to temp file that will hold the authorization response from SecureCloud"
 }
 
@@ -95,7 +96,7 @@ ExitWithUsage() {
 
 GetTicketFromScw() {
   getTicketUrl="${TUFIN_SECURECHANGE_URL}/api/securechange/tickets/${ticketID}.json"
-  echo "Calling api: ${getTicketUrl}"
+  echo "Getting ticket #${ticketID} from SecureChange. Calling API: ${getTicketUrl}"
   code=$(curl -s -k -w "%{response_code}" -u "${TUFIN_SECURECHANGE_CREDENTIALS}" -o "${scwResponseFile}" "${getTicketUrl}")
   if [[ "${code}" -ne "200" ]]; then
     echo "ERROR: SecureChange HTTP response status code was ${code}, URL: ${getTicketUrl}"
@@ -129,7 +130,7 @@ ExtractTicketData() {
 
 FindTargetIds() {
   getTargetsUrl="${TUFIN_SECURECLOUD_URL}/iris/api/provisioning/targets"
-  echo "Calling api: ${getTargetsUrl}"
+  echo "Getting all possible target IDs from SecureCloud. Calling api: ${getTargetsUrl}"
   code=$(curl -s -k -w "%{response_code}" -H "Authorization: Bearer ${TUFIN_SECURECLOUD_API_KEY}" -o "${scTargetsFile}" "${getTargetsUrl}")
   if [[ "${code}" -ne "200" ]]; then
     echo "ERROR: SecureChange HTTP response status code was ${code}, URL: ${getTicketUrl}"
@@ -142,7 +143,7 @@ FindTargetIds() {
     echo "ERROR: Did not find any target"
     exit 1
   else
-    echo "Found ${#scTargetIDs[@]} targets"
+    echo "Found a match to ${#scTargetIDs[@]} targets from SecureCloud"
   fi
 }
 
@@ -209,7 +210,7 @@ AddServices() {
 
 PostAuthRequest() {
   postAuthUrl="${TUFIN_SECURECLOUD_URL}/api/iris/model/cross-account/integration/verify-changes"
-  echo "Calling api: ${postAuthUrl}"
+  echo "Verifying changes with SecureCloud. Calling api: ${postAuthUrl}"
   code=$(curl -X POST -s -k -w "%{response_code}" -H "Authorization: Bearer ${TUFIN_SECURECLOUD_API_KEY}" --header 'Format: terraform02' -F "plan=@${terraformPlanFile}" -F "access-request=@${scAuthRequestBody}" -o "${scAuthResponseFile}" "${postAuthUrl}")
 
   if [[ "${code}" -ne "200" ]]; then
