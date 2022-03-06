@@ -29,7 +29,7 @@ pipeline {
     }
     post {
         always {
-            dir('"${env.BUILD_NUMBER}") {
+            dir('"${env.BUILD_NUMBER}"') {
                 archiveArtifacts '*'
             }
         }
