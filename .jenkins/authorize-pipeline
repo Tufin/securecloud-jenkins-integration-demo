@@ -33,15 +33,5 @@ pipeline {
             }
         }
     }
-    post {
-        always {
-            script {
-                sh 'cat ${SCW_RESPONSE_FILE} | jq > ${SCW_RESPONSE_FILE}'
-                sh 'cat ${SC_TARGETS_FILE} | jq > ${SC_TARGETS_FILE}'
-                sh 'cat ${SC_AUTH_REQUEST_BODY_FILE} | jq > ${SC_AUTH_REQUEST_BODY_FILE}'
-                sh 'cat ${SC_AUTH_RESPONSE_FILE} | jq > ${SC_AUTH_RESPONSE_FILE}'
-            }
-            archiveArtifacts "${TMP_DIR}/*"
-        }
-    }
+
 }
