@@ -29,7 +29,9 @@ pipeline {
     }
     post {
         always {
-            archiveArtifacts artifacts: '"${SCW_RESPONSE_FILE}"'
+            dir('"${env.BUILD_NUMBER}") {
+                archiveArtifacts '*'
+            }
         }
     }
 }
