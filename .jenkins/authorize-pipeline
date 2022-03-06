@@ -29,7 +29,7 @@ pipeline {
     }
     post {
         always {
-            script {
+            catchError {
                 sh 'cat "${SCW_RESPONSE_FILE}" | jq > "${SCW_RESPONSE_FILE}".tmp && mv "${SCW_RESPONSE_FILE}".tmp "${SCW_RESPONSE_FILE}"'
                 sh 'cat "${SC_TARGETS_FILE}" | jq > "${SC_TARGETS_FILE}".tmp && mv "${SC_TARGETS_FILE}".tmp "${SC_TARGETS_FILE}"'
                 sh 'cat "${SC_AUTH_REQUEST_BODY_FILE}" | jq > "${SC_AUTH_REQUEST_BODY_FILE}".tmp && mv "${SC_AUTH_REQUEST_BODY_FILE}".tmp "${SC_AUTH_REQUEST_BODY_FILE}"'
