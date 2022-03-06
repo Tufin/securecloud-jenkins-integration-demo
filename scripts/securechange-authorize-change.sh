@@ -133,7 +133,7 @@ FindTargetIds() {
   echo "Getting all possible target IDs from SecureCloud. Calling api: ${getTargetsUrl}"
   code=$(curl -s -k -w "%{response_code}" -H "Authorization: Bearer ${TUFIN_SECURECLOUD_API_KEY}" -o "${scTargetsFile}" "${getTargetsUrl}")
   if [[ "${code}" -ne "200" ]]; then
-    echo "ERROR: SecureChange HTTP response status code was ${code}, URL: ${getTicketUrl}"
+    echo "ERROR: SecureCloud HTTP response status code was ${code}, URL: ${getTicketUrl}"
     exit 1
   fi
 
