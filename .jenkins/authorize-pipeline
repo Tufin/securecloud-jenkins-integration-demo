@@ -42,9 +42,6 @@ pipeline {
                 sh 'cat ${SC_AUTH_RESPONSE_FILE} | jq > ${SC_AUTH_RESPONSE_FILE}'
             }
             archiveArtifacts "${TMP_DIR}/*"
-            script {
-                sh 'rm -rf "${TMP_DIR}"'
-            }
         }
     }
 }
