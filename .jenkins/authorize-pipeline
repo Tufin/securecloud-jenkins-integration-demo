@@ -13,13 +13,15 @@ pipeline {
     stages {
         stage('Terraform Change Authorization') {
             steps {
-                withCredentials([string(credentialsId: "${SECURECLOUD_JENKINS_CREDENTIALS_ID}", variable: 'TUFIN_SECURECLOUD_API_KEY')]) {
-                    withCredentials([usernameColonPassword(credentialsId: "${SECURECHANGE_JENKINS_CREDENTIALS_ID}", variable: 'TUFIN_SECURECHANGE_CREDENTIALS')]) {
-                        withFileParameter('uploaded_plan') {
-                            script {
-                                sh 'mkdir -p "${TMP_DIR}"'
-                                sh 'cat $uploaded_plan > uploaded_plan.json'
-                                sh 'bash ./scripts/securechange-authorize-change.sh "${SECURECHANGE_TICKET_ID}" "${TERRAFORM_PLAN_FILE}" "${SCW_RESPONSE_FILE}" "${SC_TARGETS_FILE}" "${SC_AUTH_REQUEST_BODY_FILE}" "${SC_AUTH_RESPONSE_FILE}"'
+                step {
+                    withCredentials([string(credentialsId: "${SECURECLOUD_JENKINS_CREDENTIALS_ID}", variable: 'TUFIN_SECURECLOUD_API_KEY')]) {
+                        withCredentials([usernameColonPassword(credentialsId: "${SECURECHANGE_JENKINS_CREDENTIALS_ID}", variable: 'TUFIN_SECURECHANGE_CREDENTIALS')]) {
+                            withFileParameter('uploaded_plan') {
+                                script {
+                                    sh 'mkdir -p "${TMP_DIR}"'
+                                    sh 'cat $uploaded_plan > uploaded_plan.json'
+                                    sh 'bash ./scripts/securechange-authorize-change.sh "${SECURECHANGE_TICKET_ID}" "${TERRAFORM_PLAN_FILE}" "${SCW_RESPONSE_FILE}" "${SC_TARGETS_FILE}" "${SC_AUTH_REQUEST_BODY_FILE}" "${SC_AUTH_RESPONSE_FILE}"'
+                                }
                             }
                         }
                     }
