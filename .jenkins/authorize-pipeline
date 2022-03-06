@@ -31,6 +31,7 @@ pipeline {
                 sh 'cat ${SC_AUTH_REQUEST_BODY_FILE} | jq > ${SC_AUTH_REQUEST_BODY_FILE}'
                 sh 'cat ${SC_AUTH_RESPONSE_FILE} | jq > ${SC_AUTH_RESPONSE_FILE}'
             }
+            archiveArtifacts artifacts: "${TERRAFORM_PLAN_FILE}"
             archiveArtifacts artifacts: "${SCW_RESPONSE_FILE}"
             archiveArtifacts artifacts: "${SC_TARGETS_FILE}"
             archiveArtifacts artifacts: "${SC_AUTH_REQUEST_BODY_FILE}"
