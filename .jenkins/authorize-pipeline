@@ -42,7 +42,7 @@ pipeline {
             }
             dir("${env.BUILD_NUMBER}") {
                 archiveArtifacts '*'
-                deleteDir
+                deleteDir()
             }
         }
     }
