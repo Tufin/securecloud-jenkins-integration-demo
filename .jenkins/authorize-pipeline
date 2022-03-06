@@ -3,13 +3,21 @@ pipeline {
         label 'linux-agent'
     }
     environment {
-        TERRAFORM_PLAN_FILE="${env.WORKSPACE}" + "/" + "${env.TERRAFORM_PLAN_FILE}"
-        SCW_RESPONSE_FILE="${env.WORKSPACE}" + "/" + "scw_response_" + "${env.BUILD_NUMBER}" + ".json"
-        SC_TARGETS_FILE="${env.WORKSPACE}" + "/" + "sc_targets_" + "${env.BUILD_NUMBER}" + ".json"
-        SC_AUTH_REQUEST_BODY_FILE="${env.WORKSPACE}" + "/" + "sc_auth_request_body_" + "${env.BUILD_NUMBER}" + ".json"
-        SC_AUTH_RESPONSE_FILE="${env.WORKSPACE}" + "/" + "sc_auth_response_" + "${env.BUILD_NUMBER}" + ".json"
+        TMP_DIR="${env.WORKSPACE}" + "/" + "${env.BUILD_NUMBER}"
+        TERRAFORM_PLAN_FILE="${TMP_DIR}" + "/" + "${env.TERRAFORM_PLAN_FILE}"
+        SCW_RESPONSE_FILE="${TMP_DIR}" + "/scw_response.json"
+        SC_TARGETS_FILE="${TMP_DIR}" + "/sc_targets.json"
+        SC_AUTH_REQUEST_BODY_FILE="${TMP_DIR}" + "/sc_auth_request_body.json"
+        SC_AUTH_RESPONSE_FILE="${TMP_DIR}" + "/sc_auth_response.json"
     }
     stages {
+        stage('Create tmp directory') {
+            steps {
+                script {
+                    sh 'mkdir -p "${TMP_DIR}"'
+                }
+            }
+        }
         stage('Terraform Change Authorization') {
             steps {
                 withCredentials([string(credentialsId: "${SECURECLOUD_JENKINS_CREDENTIALS_ID}", variable: 'TUFIN_SECURECLOUD_API_KEY')]) {
@@ -33,16 +41,9 @@ pipeline {
                 sh 'cat ${SC_AUTH_REQUEST_BODY_FILE} | jq > ${SC_AUTH_REQUEST_BODY_FILE}'
                 sh 'cat ${SC_AUTH_RESPONSE_FILE} | jq > ${SC_AUTH_RESPONSE_FILE}'
             }
-            archiveArtifacts artifacts: "${TERRAFORM_PLAN_FILE}"
-            archiveArtifacts artifacts: "${SCW_RESPONSE_FILE}"
-            archiveArtifacts artifacts: "${SC_TARGETS_FILE}"
-            archiveArtifacts artifacts: "${SC_AUTH_REQUEST_BODY_FILE}"
-            archiveArtifacts artifacts: "${SC_AUTH_RESPONSE_FILE}"
+            archiveArtifacts "${TMP_DIR}/*"
             script {
-                sh 'rm -f ${SCW_RESPONSE_FILE}'
-                sh 'rm -f ${SC_TARGETS_FILE}'
-                sh 'rm -f ${SC_AUTH_REQUEST_BODY_FILE}'
-                sh 'rm -f ${SC_AUTH_RESPONSE_FILE}'
+                sh 'rm -rf "${TMP_DIR}"'
             }
         }
     }
