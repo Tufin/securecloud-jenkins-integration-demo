@@ -30,13 +30,6 @@ pipeline {
     post {
         always {
             archiveArtifacts '"${SCW_RESPONSE_FILE}"'
-            archiveArtifacts '"${SC_TARGETS_FILE}"'
-            archiveArtifacts '"${SC_AUTH_REQUEST_BODY_FILE}"'
-            archiveArtifacts '"${SC_AUTH_RESPONSE_FILE}"'
-            archiveArtifacts '"${TERRAFORM_PLAN_FILE}"'
-            script {
-                sh 'rm -rf "${TMP_DIR}"'
-            }
         }
     }
 }
