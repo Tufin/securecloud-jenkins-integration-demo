@@ -1,0 +1,46 @@
+pipeline {
+    agent {
+        label 'linux-agent'
+    }
+    environment {
+        TERRAFORM_PLAN_FILE="${env.WORKSPACE}" + "/" + "${env.TERRAFORM_PLAN_FILE}"
+        SCW_RESPONSE_FILE="${env.WORKSPACE}" + "/" + "scw_response_" + "${env.BUILD_NUMBER}" + ".json"
+        SC_TARGETS_FILE="${env.WORKSPACE}" + "/" + "sc_targets_" + "${env.BUILD_NUMBER}" + ".json"
+        SC_AUTH_REQUEST_BODY_FILE="${env.WORKSPACE}" + "/" + "sc_auth_request_body_" + "${env.BUILD_NUMBER}" + ".json"
+        SC_AUTH_RESPONSE_FILE="${env.WORKSPACE}" + "/" + "sc_auth_response_" + "${env.BUILD_NUMBER}" + ".json"
+    }
+    stages {
+        stage('Terraform Change Authorization') {
+            steps {
+                withCredentials([string(credentialsId: "${SECURECLOUD_JENKINS_CREDENTIALS_ID}", variable: 'TUFIN_SECURECLOUD_API_KEY')]) {
+                    withFileParameter('uploaded_plan') {
+                        script {
+                            sh 'cat $uploaded_plan > uploaded_plan.json'
+                            sh 'bash ./scripts/securechange-authorize-change.sh "${SECURECHANGE_TICKET_ID}" "${TERRAFORM_PLAN_FILE}" "${SCW_RESPONSE_FILE}" "${SC_TARGETS_FILE}" "${SC_AUTH_REQUEST_BODY_FILE}" "${SC_AUTH_RESPONSE_FILE}"'
+                        }
+                    }
+                }
+            }
+        }
+    }
+    post {
+        always {
+            script {
+                sh 'cat ${SCW_RESPONSE_FILE} | jq > ${SCW_RESPONSE_FILE}'
+                sh 'cat ${SC_TARGETS_FILE} | jq > ${SC_TARGETS_FILE}'
+                sh 'cat ${SC_AUTH_REQUEST_BODY_FILE} | jq > ${SC_AUTH_REQUEST_BODY_FILE}'
+                sh 'cat ${SC_AUTH_RESPONSE_FILE} | jq > ${SC_AUTH_RESPONSE_FILE}'
+            }
+            archiveArtifacts artifacts: "${SCW_RESPONSE_FILE}"
+            archiveArtifacts artifacts: "${SC_TARGETS_FILE}"
+            archiveArtifacts artifacts: "${SC_AUTH_REQUEST_BODY_FILE}"
+            archiveArtifacts artifacts: "${SC_AUTH_RESPONSE_FILE}"
+            script {
+                rm -f ${SCW_RESPONSE_FILE}'
+                rm -f ${SC_TARGETS_FILE}'
+                rm -f ${SC_AUTH_REQUEST_BODY_FILE}'
+                rm -f ${SC_AUTH_RESPONSE_FILE}'
+            }
+        }
+    }
+}
