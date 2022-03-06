@@ -37,10 +37,10 @@ pipeline {
             archiveArtifacts artifacts: "${SC_AUTH_REQUEST_BODY_FILE}"
             archiveArtifacts artifacts: "${SC_AUTH_RESPONSE_FILE}"
             script {
-                rm -f ${SCW_RESPONSE_FILE}
-                rm -f ${SC_TARGETS_FILE}
-                rm -f ${SC_AUTH_REQUEST_BODY_FILE}
-                rm -f ${SC_AUTH_RESPONSE_FILE}
+                sh rm -f ${SCW_RESPONSE_FILE}
+                sh rm -f ${SC_TARGETS_FILE}
+                sh rm -f ${SC_AUTH_REQUEST_BODY_FILE}
+                sh rm -f ${SC_AUTH_RESPONSE_FILE}
             }
         }
     }
