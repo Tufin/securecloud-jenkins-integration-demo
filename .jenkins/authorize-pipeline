@@ -29,12 +29,14 @@ pipeline {
             }
         }
         stage('Parse tmp files') {
-            script {
-                sh 'cat ${SCW_RESPONSE_FILE} | jq > ${SCW_RESPONSE_FILE}.tmp && mv ${SCW_RESPONSE_FILE}.tmp ${SCW_RESPONSE_FILE}'
-                sh 'cat ${SC_TARGETS_FILE} | jq > ${SC_TARGETS_FILE}.tmp && mv ${SC_TARGETS_FILE}.tmp ${SC_TARGETS_FILE}'
-                sh 'cat ${SC_AUTH_REQUEST_BODY_FILE} | jq > ${SC_AUTH_REQUEST_BODY_FILE}.tmp && mv ${SC_AUTH_REQUEST_BODY_FILE}.tmp ${SC_AUTH_REQUEST_BODY_FILE}'
-                sh 'cat ${SC_AUTH_RESPONSE_FILE} | jq > ${SC_AUTH_RESPONSE_FILE}.tmp && mv ${SC_AUTH_RESPONSE_FILE}.tmp ${SC_AUTH_RESPONSE_FILE}'
-                sh 'cp ${TERRAFORM_PLAN_FILE} ${TMP_DIR}/'
+            step {
+                script {
+                    sh 'cat ${SCW_RESPONSE_FILE} | jq > ${SCW_RESPONSE_FILE}.tmp && mv ${SCW_RESPONSE_FILE}.tmp ${SCW_RESPONSE_FILE}'
+                    sh 'cat ${SC_TARGETS_FILE} | jq > ${SC_TARGETS_FILE}.tmp && mv ${SC_TARGETS_FILE}.tmp ${SC_TARGETS_FILE}'
+                    sh 'cat ${SC_AUTH_REQUEST_BODY_FILE} | jq > ${SC_AUTH_REQUEST_BODY_FILE}.tmp && mv ${SC_AUTH_REQUEST_BODY_FILE}.tmp ${SC_AUTH_REQUEST_BODY_FILE}'
+                    sh 'cat ${SC_AUTH_RESPONSE_FILE} | jq > ${SC_AUTH_RESPONSE_FILE}.tmp && mv ${SC_AUTH_RESPONSE_FILE}.tmp ${SC_AUTH_RESPONSE_FILE}'
+                    sh 'cp ${TERRAFORM_PLAN_FILE} ${TMP_DIR}/'
+                }
             }
         }
     }
