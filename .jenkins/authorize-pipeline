@@ -13,7 +13,7 @@ pipeline {
         stage('Terraform Change Authorization') {
             steps {
                 withCredentials([string(credentialsId: "${SECURECLOUD_JENKINS_CREDENTIALS_ID}", variable: 'TUFIN_SECURECLOUD_API_KEY')]) {
-                    withCredentials([string(credentialsId: "${SECURECHANGE_JENKINS_CREDENTIALS_ID}", variable: 'TUFIN_SECURECHANGE_CREDENTIALS')]) {
+                    withCredentials([usernameColonPassword(credentialsId: "${SECURECHANGE_JENKINS_CREDENTIALS_ID}", variable: 'TUFIN_SECURECHANGE_CREDENTIALS')]) {
                         withFileParameter('uploaded_plan') {
                             script {
                                 sh 'cat $uploaded_plan > uploaded_plan.json'
