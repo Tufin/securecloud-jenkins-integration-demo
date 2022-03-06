@@ -11,15 +11,11 @@ pipeline {
         SC_AUTH_RESPONSE_FILE="${TMP_DIR}" + "/sc_auth_response.json"
     }
     stages {
-        stage('Create tmp directory') {
+        stage('Terraform Change Authorization') {
             steps {
                 script {
                     sh 'mkdir -p "${TMP_DIR}"'
                 }
-            }
-        }
-        stage('Terraform Change Authorization') {
-            steps {
                 withCredentials([string(credentialsId: "${SECURECLOUD_JENKINS_CREDENTIALS_ID}", variable: 'TUFIN_SECURECLOUD_API_KEY')]) {
                     withCredentials([usernameColonPassword(credentialsId: "${SECURECHANGE_JENKINS_CREDENTIALS_ID}", variable: 'TUFIN_SECURECHANGE_CREDENTIALS')]) {
                         withFileParameter('uploaded_plan') {
@@ -32,9 +28,7 @@ pipeline {
                 }
             }
         }
-    }
-    post {
-        always {
+        stage('Parse tmp files') {
             script {
                 sh 'cat ${SCW_RESPONSE_FILE} | jq > ${SCW_RESPONSE_FILE}.tmp && mv ${SCW_RESPONSE_FILE}.tmp ${SCW_RESPONSE_FILE}'
                 sh 'cat ${SC_TARGETS_FILE} | jq > ${SC_TARGETS_FILE}.tmp && mv ${SC_TARGETS_FILE}.tmp ${SC_TARGETS_FILE}'
@@ -42,6 +36,8 @@ pipeline {
                 sh 'cat ${SC_AUTH_RESPONSE_FILE} | jq > ${SC_AUTH_RESPONSE_FILE}.tmp && mv ${SC_AUTH_RESPONSE_FILE}.tmp ${SC_AUTH_RESPONSE_FILE}'
             }
         }
+    }
+    post {
         always {
             archiveArtifacts "${TMP_DIR}/*"
             script {
