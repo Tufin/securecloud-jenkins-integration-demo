@@ -111,19 +111,19 @@ ExtractTicketData() {
     exit 1
   fi
 
-  targetsJqSelector='.ticket.steps.step[] | select(.name == "Technical Design") | .tasks.task.fields.field[].access_request.targets.target[]? | select(.external_uid) | .external_uid'
+  targetsJqSelector='.ticket.steps.step[] | select(.name == "Suggest Target") | .tasks.task.fields.field.access_request.targets.target[]? | select(.external_uid) | .external_uid'
   scwTargets=$(jq "${targetsJqSelector}" "${scwResponseFile}" | paste -s -d',')
 
-  sourcesJqSelector='.ticket.steps.step[] | select(.name == "Technical Design") | .tasks.task.fields.field[].access_request.sources.source[]? | [.ip_address, .cidr|tostring] | join("/")'
+  sourcesJqSelector='.ticket.steps.step[] | select(.name == "Suggest Target") | .tasks.task.fields.field.access_request.sources.source[]? | [.ip_address, .cidr|tostring] | join("/")'
   readarray -t scwSources <<<$(jq -r "${sourcesJqSelector}" "${scwResponseFile}")
 
-  destinationsJqSelector='.ticket.steps.step[] | select(.name == "Technical Design") | .tasks.task.fields.field[].access_request.destinations.destination[]? | [.ip_address, .cidr|tostring] | join("/")'
+  destinationsJqSelector='.ticket.steps.step[] | select(.name == "Suggest Target") | .tasks.task.fields.field.access_request.destinations.destination[]? | [.ip_address, .cidr|tostring] | join("/")'
   readarray -t scwDestinations <<<$(jq -r "${destinationsJqSelector}" "${scwResponseFile}")
 
-  isAnyJqSelector='.ticket.steps.step[] | select(.name == "Technical Design") | .tasks.task.fields.field[].access_request.services.service[]? | select(."@type"=="ANY")'
+  isAnyJqSelector='.ticket.steps.step[] | select(.name == "Suggest Target") | .tasks.task.fields.field.access_request.services.service[]? | select(."@type"=="ANY")'
   anyServiceCount=$(jq -r "${isAnyJqSelector}" "${scwResponseFile}" | wc -l)
   if [[ anyServiceCount -eq 0 ]]; then
-    servicesJqSelector='.ticket.steps.step[] | select(.name == "Technical Design") | .tasks.task.fields.field[].access_request.services.service[]? | [.protocol, .port|tostring] | @csv'
+    servicesJqSelector='.ticket.steps.step[] | select(.name == "Suggest Target") | .tasks.task.fields.field.access_request.services.service[]? | [.protocol, .port|tostring] | @csv'
     readarray -t scwServicesCsv <<<$(jq -r "${servicesJqSelector}" "${scwResponseFile}")
   fi
 }
