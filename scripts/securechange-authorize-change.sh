@@ -115,16 +115,16 @@ ExtractTicketData() {
   scwTargets=$(jq "${targetsJqSelector}" "${scwResponseFile}" | paste -s -d',')
 
   sourcesJqSelector='.ticket.steps.step[] | select(.name == "Suggest Target") | .tasks.task.fields.field.access_request.sources.source[]? | [.ip_address, .cidr|tostring] | join("/")'
-  readarray -t scwSources <<<$(jq -r "${sourcesJqSelector}" "${scwResponseFile}")
+  readarray -t scwSources <<<"$(jq -r "${sourcesJqSelector}" "${scwResponseFile}")"
 
   destinationsJqSelector='.ticket.steps.step[] | select(.name == "Suggest Target") | .tasks.task.fields.field.access_request.destinations.destination[]? | [.ip_address, .cidr|tostring] | join("/")'
-  readarray -t scwDestinations <<<$(jq -r "${destinationsJqSelector}" "${scwResponseFile}")
+  readarray -t scwDestinations <<<"$(jq -r "${destinationsJqSelector}" "${scwResponseFile}")"
 
   isAnyJqSelector='.ticket.steps.step[] | select(.name == "Suggest Target") | .tasks.task.fields.field.access_request.services.service[]? | select(."@type"=="ANY")'
   anyServiceCount=$(jq -r "${isAnyJqSelector}" "${scwResponseFile}" | wc -l)
   if [[ anyServiceCount -eq 0 ]]; then
     servicesJqSelector='.ticket.steps.step[] | select(.name == "Suggest Target") | .tasks.task.fields.field.access_request.services.service[]? | [.protocol, .port|tostring] | @csv'
-    readarray -t scwServicesCsv <<<$(jq -r "${servicesJqSelector}" "${scwResponseFile}")
+    readarray -t scwServicesCsv <<<"$(jq -r "${servicesJqSelector}" "${scwResponseFile}")"
   fi
 }
 
@@ -138,7 +138,7 @@ FindTargetIds() {
   fi
 
   targetIDsJqSelector=".targets[] | select(.azure_vnet_id==(${scwTargets})) | .id"
-  readarray -t scTargetIDs <<<$(jq -r "${targetIDsJqSelector}" "${scTargetsFile}")
+  readarray -t scTargetIDs <<<"$(jq -r "${targetIDsJqSelector}" "${scTargetsFile}")"
   if [[ ${#scTargetIDs[@]} -eq 0 ]]; then
     echo "ERROR: Did not find any target"
     exit 1
