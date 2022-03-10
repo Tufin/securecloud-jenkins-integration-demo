@@ -224,7 +224,7 @@ ParseAuthorizationResponse() {
   if [[ "${status^^}" == "PASS" ]]; then
     echo "ERROR: SecureCloud authorization completed successfully"
   else
-    echo "ERROR: SecureCloud authorization completed with status: ${status}, for more details see ${scAuthResponseFile}"
+    echo "SUCCESS: SecureCloud authorization completed with status: ${status}, for more details see ${scAuthResponseFile}"
     exit 1
   fi
 }
