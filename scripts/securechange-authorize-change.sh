@@ -197,7 +197,7 @@ AddServices() {
     for i in ${!scwServicesCsv[@]}; do
       protocol=$(echo "${scwServicesCsv[$i]}" | cut -d',' -f1 | cut -d"\"" -f2)
       port=$(echo "${scwServicesCsv[$i]}" | cut -d',' -f2 | cut -d"\"" -f2)
-      authRequestBody+=$(jq -n --arg protocol "${protocol}" --arg port "${port}" '{"type":"TRANSPORT", "protocol":$protocol, "minPort":$port, "maxPort":$port}')
+      authRequestBody+=$(jq -n --arg protocol "${protocol}" --arg port "${port}" '{"type":"TRANSPORT", "protocol":$protocol, "min_port":$port, "max_port":$port}')
       if [[ ${#scwServicesCsv[@]} -ne ${i}+1 ]]; then
         authRequestBody+=','
       fi
