@@ -222,9 +222,9 @@ PostAuthRequest() {
 ParseAuthorizationResponse() {
   status=$(jq -r '.status' "${scAuthResponseFile}")
   if [[ "${status^^}" == "PASS" ]]; then
-    echo "ERROR: SecureCloud authorization completed successfully"
+    echo "SUCCESS: SecureCloud authorization completed with status: ${status}"
   else
-    echo "SUCCESS: SecureCloud authorization completed with status: ${status}, for more details see ${scAuthResponseFile}"
+    echo "ERROR: SecureCloud authorization completed with status: ${status}, for more details see ${scAuthResponseFile}"
     exit 1
   fi
 }
